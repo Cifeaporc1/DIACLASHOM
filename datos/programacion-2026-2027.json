@@ -1,0 +1,1909 @@
+{
+ "version": 1,
+ "curso": "2026-2027",
+ "centro": "CIFEA Lorca",
+ "grupos": [
+  {
+   "id": "G1",
+   "nombre": "1.º GASA",
+   "claves": [
+    "ALUPRIGASA1",
+    "ALUPRIGASA2",
+    "ALUPRIGASA3",
+    "ALUPRIGASA4",
+    "ALUPRIGASA5",
+    "ALUPRIGASA6",
+    "ALUPRIGASA7",
+    "ALUPRIGASA8",
+    "ALUPRIGASA9",
+    "ALUPRIGASA10",
+    "ALUPRIGASA11",
+    "ALUPRIGASA12",
+    "ALUPRIGASA13",
+    "ALUPRIGASA14",
+    "ALUPRIGASA15",
+    "ALUPRIGASA16",
+    "ALUPRIGASA17",
+    "ALUPRIGASA18",
+    "ALUPRIGASA19",
+    "ALUPRIGASA20",
+    "ALUPRIGASA21",
+    "ALUPRIGASA22",
+    "ALUPRIGASA23",
+    "ALUPRIGASA24",
+    "ALUPRIGASA25",
+    "ALUPRIGASA26",
+    "ALUPRIGASA27",
+    "ALUPRIGASA28",
+    "ALUPRIGASA29",
+    "ALUPRIGASA30"
+   ]
+  },
+  {
+   "id": "G2",
+   "nombre": "2.º GASA",
+   "claves": [
+    "ALUSEGGASA1",
+    "ALUSEGGASA2",
+    "ALUSEGGASA3",
+    "ALUSEGGASA4",
+    "ALUSEGGASA5",
+    "ALUSEGGASA6",
+    "ALUSEGGASA7",
+    "ALUSEGGASA8",
+    "ALUSEGGASA9",
+    "ALUSEGGASA10",
+    "ALUSEGGASA11",
+    "ALUSEGGASA12",
+    "ALUSEGGASA13",
+    "ALUSEGGASA14",
+    "ALUSEGGASA15",
+    "ALUSEGGASA16",
+    "ALUSEGGASA17",
+    "ALUSEGGASA18",
+    "ALUSEGGASA19",
+    "ALUSEGGASA20",
+    "ALUSEGGASA21",
+    "ALUSEGGASA22",
+    "ALUSEGGASA23",
+    "ALUSEGGASA24",
+    "ALUSEGGASA25",
+    "ALUSEGGASA26",
+    "ALUSEGGASA27",
+    "ALUSEGGASA28",
+    "ALUSEGGASA29",
+    "ALUSEGGASA30"
+   ]
+  }
+ ],
+ "modulos": [
+  {
+   "codigo": "1274",
+   "nombre": "Organización y control de la reproducción y cría",
+   "grupo": "G1",
+   "horas": 224,
+   "pctFaltas": 0.3,
+   "evaluaciones": 3,
+   "pesoFC": 0.8,
+   "pesoFE": 0.2,
+   "libretaImprescindible": false,
+   "ra": [
+    {
+     "codigo": "RA1",
+     "texto": "Supervisa el manejo de reproductores y su adaptación a la explotación, analizando procedimientos y protocolos de actuación.",
+     "peso": 0.15,
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "codigo": "RA2",
+     "texto": "Organiza y controla las operaciones de recela y de detección de celo, relacionando las técnicas, los medios y los métodos con las características de las especies y el plan de reproducción.",
+     "peso": 0.1,
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "codigo": "RA3",
+     "texto": "Elabora y aplica el plan de cubriciones, analizando la finalidad productiva de la explotación.",
+     "peso": 0.15,
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "codigo": "RA4",
+     "texto": "Organiza y controla el estado y manejo del periodo de gestación y parto, caracterizando los protocolos de actuación.",
+     "peso": 0.2,
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "codigo": "RA5",
+     "texto": "Supervisa las operaciones de manejo en hembras y crías en periodo de lactación, valorando los métodos, las técnicas y los protocolos de actuación.",
+     "peso": 0.15,
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "codigo": "RA6",
+     "texto": "Gestiona el programa alimenticio de reproductores, relacionando las especies con sus necesidades y las exigencias productivas.",
+     "peso": 0.1,
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "codigo": "RA7",
+     "texto": "Supervisa y organiza la producción láctea, analizando las características de las especies, las técnicas y los protocolos de actuación.",
+     "peso": 0.15,
+     "ut": "UT7",
+     "ev": 3
+    }
+   ],
+   "ce": [
+    {
+     "ra": "RA1",
+     "codigo": "1.a",
+     "texto": "Se ha controlado la selección de razas autóctonas que ofrecen garantías reproductoras.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A1.1",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.b",
+     "texto": "Se ha registrado la entrada de nuevos reproductores en la explotación.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A1.2",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.c",
+     "texto": "Se ha programado el control de los factores que inciden en la fase reproductiva de cada especie.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.d",
+     "texto": "Se han organizado las tareas de ejercitación de los sementales en función de la especie.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A1.4",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.e",
+     "texto": "Se ha verificado el aprendizaje y entrenamiento de los sementales en la recolección de semen.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A1.5",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.f",
+     "texto": "Se han controlado las operaciones de extracción y preparación del semen.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A1.6",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.g",
+     "texto": "Se ha programado, preparado y vigilado el transporte de las especies de hembras reproductoras que así lo requieran.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.h",
+     "texto": "Se ha controlado el proceso de certificación en ganadería ecológica en el manejo de reproductores.",
+     "peso": 0.05,
+     "instrumento": "PE",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.i",
+     "texto": "Se han organizado los recursos humanos y materiales en el manejo de reproductores.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A1.7",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.j",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A1.8",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.a",
+     "texto": "Se ha realizado la ubicación de los sementales.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A2.1",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.b",
+     "texto": "Se ha asignado el semental en función de la especie.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A2.2",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.c",
+     "texto": "Se ha asignado el número de hembras por macho en la monta natural.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A2.1",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.d",
+     "texto": "Se ha organizado el programa de monta natural.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A2.3",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.e",
+     "texto": "Se han organizado los lotes de hembras para, en su caso estimular, o sincronizar los celos.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A2.4",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.f",
+     "texto": "Se ha supervisado el manejo de machos en las tareas de recela.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A2.5",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.g",
+     "texto": "Se han detectado a las hembras que están en celo.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A2.6",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.h",
+     "texto": "Se han realizado los registros de control y seguimiento de las operaciones ejecutadas.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A2.7",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A2.8",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.a",
+     "texto": "Se ha analizado el número de animales y sus características en la elaboración del plan de cubriciones.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A3.1",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.b",
+     "texto": "Se han verificado los registros de celos.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A3.2",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.c",
+     "texto": "Se han realizado técnicas de inseminación artificial.",
+     "peso": 0.2,
+     "instrumento": "PP",
+     "actividad": "A3.3",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.d",
+     "texto": "Se ha realizado la monta natural.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A3.4",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.e",
+     "texto": "Se ha controlado el registro de cubriciones, tanto de hembras como de sementales.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A3.5",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.f",
+     "texto": "Se ha supervisado el manejo de cubriciones en ganadería ecológica.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A3.6",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.g",
+     "texto": "Se han organizado los recursos humanos y materiales en los trabajos de cubriciones.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A3.7",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.h",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A3.8",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.a",
+     "texto": "Se han registrado las hembras que están preñadas.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A4.1",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.b",
+     "texto": "Se han registrado las repeticiones a celo, hembras vacías y abortos.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.2",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.c",
+     "texto": "Se ha organizado el manejo de hembras cubiertas.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A4.3",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.d",
+     "texto": "Se ha controlado el traslado y la ubicación de las hembras próximas al parto.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A4.4",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.e",
+     "texto": "Se ha realizado un control rutinario de las hembras más próximas al parto.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A4.5",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.f",
+     "texto": "Se ha descrito la actuación ante un parto.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A4.3",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.g",
+     "texto": "Se han realizado los cuidados posteriores al parto.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A4.6",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.h",
+     "texto": "Se han anotado las incidencias del parto y registrado los nacimientos.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A4.7",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A4.8",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.a",
+     "texto": "Se ha controlado la conducta de las crías recién nacidas.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.1",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.b",
+     "texto": "Se ha descrito el encalostramiento de las crías recién nacidas.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A5.2",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.c",
+     "texto": "Se han examinado las ubres de las madres.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.3",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.d",
+     "texto": "Se ha controlado la lactación artificial y natural.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.4",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.e",
+     "texto": "Se ha verificado el estado general de las crías de forma rutinaria.",
+     "peso": 0.05,
+     "instrumento": "PP",
+     "actividad": "A5.5",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.f",
+     "texto": "Se ha supervisado, en su caso, el comportamiento maternal.",
+     "peso": 0.05,
+     "instrumento": "PP",
+     "actividad": "A5.6",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.g",
+     "texto": "Se ha controlado el pesaje y, en su caso, otras prácticas zootécnicas iniciales.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A5.7",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.h",
+     "texto": "Se ha integrado a la madre y a la cría en la piara, en las especies que así lo requieran.",
+     "peso": 0.05,
+     "instrumento": "PE",
+     "actividad": "A5.2",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.i",
+     "texto": "Se ha verificado el manejo y la aproximación progresiva a las crías de las especies que lo necesiten.",
+     "peso": 0.05,
+     "instrumento": "PP",
+     "actividad": "A5.8",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.j",
+     "texto": "Se ha supervisado el proceso integral de cría en ganadería ecológica.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A5.2",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.k",
+     "texto": "Se han organizado los recursos humanos y materiales en los trabajos de manejo de hembras y crías.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A5.9",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.l",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal, la de seguridad alimentaria y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A5.10",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.a",
+     "texto": "Se han descrito las materias primas alimenticias.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A6.1",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.b",
+     "texto": "Se ha controlado el acopio y almacenamiento de las materias primas alimenticias.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A6.2",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.c PE",
+     "texto": "Se han calculado las raciones alimenticias.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A6.1",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.c TP",
+     "texto": "Se han calculado las raciones alimenticias.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A6.3",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.d",
+     "texto": "Se ha manejado y controlado la maquinaria de conservación, preparación y distribución de alimentos.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A6.4",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.e",
+     "texto": "Se ha supervisado el estado de los animales según su alimentación.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A6.5",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.f",
+     "texto": "Se han controlado las operaciones de manejo del programa alimenticio.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A6.6",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.g",
+     "texto": "Se han supervisado los procedimientos de conversión de ganadería convencional a ecológica y de certificación ecológica.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A6.1",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.h",
+     "texto": "Se han organizado los recursos humanos y materiales en los trabajos de gestión del programa alimenticio.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A6.6",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA6",
+     "codigo": "6.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal, la de seguridad alimentaria y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A6.7",
+     "ut": "UT6",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.a",
+     "texto": "Se ha descrito la anatomía de la ubre.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A7.1",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.b",
+     "texto": "Se ha analizado la fisiología de la producción láctea según la especie.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A7.1",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.c",
+     "texto": "Se ha descrito la sala de ordeño y la lechería.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A7.1",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.d",
+     "texto": "Se ha explicado el proceso de ordeño mecánico.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A7.2",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.e",
+     "texto": "Se ha realizado la toma de muestras de control de la leche.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A7.3",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.f",
+     "texto": "Se ha registrado la producción de cada animal.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A7.4",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.g",
+     "texto": "Se han supervisado los procedimientos de certificación ecológica.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A7.1",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.h",
+     "texto": "Se han organizado los recursos humanos y materiales en los trabajos de producción láctea.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A7.5",
+     "ut": "UT7",
+     "ev": 3
+    },
+    {
+     "ra": "RA7",
+     "codigo": "7.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de producción ganadera ecológica, la de sanidad y bienestar animal, la de seguridad alimentaria y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A7.6",
+     "ut": "UT7",
+     "ev": 3
+    }
+   ]
+  },
+  {
+   "codigo": "1276",
+   "nombre": "Gestión de la recría de caballos",
+   "grupo": "G1",
+   "horas": 128,
+   "pctFaltas": 0.3,
+   "evaluaciones": 3,
+   "pesoFC": 0.8,
+   "pesoFE": 0.2,
+   "libretaImprescindible": false,
+   "ra": [
+    {
+     "codigo": "RA1",
+     "texto": "Planifica y supervisa la fase de destete, interpretando los protocolos y el plan productivo de la explotación.",
+     "peso": 0.2,
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "codigo": "RA2",
+     "texto": "Controla el manejo y el estado de las yeguas en los días posteriores al destete, analizando el estado de los animales y los protocolos de actuación.",
+     "peso": 0.15,
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "codigo": "RA3",
+     "texto": "Supervisa los medios técnicos en la fase de recría del potro, describiendo las etapas y las condiciones zootécnicas.",
+     "peso": 0.15,
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "codigo": "RA4",
+     "texto": "Controla el periodo de amansamiento de los potros, relacionando las técnicas y medios con las características individuales de cada animal y el destino en su fase adulta.",
+     "peso": 0.3,
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "codigo": "RA5",
+     "texto": "Supervisa la adaptación de los potros a la fase de recría, analizando los medios, los métodos y las técnicas.",
+     "peso": 0.2,
+     "ut": "UT4",
+     "ev": 2
+    }
+   ],
+   "ce": [
+    {
+     "ra": "RA1",
+     "codigo": "1.a",
+     "texto": "Se han organizado lotes de destete.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A1.1",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.b",
+     "texto": "Se ha determinado el momento óptimo para realizar el destete de las rastras.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A1.2",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.c",
+     "texto": "Se han controlado las operaciones requeridas según el tipo y método de destete.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.d",
+     "texto": "Se ha comprobado el estado general de las rastras y yeguas durante esta fase.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A1.4",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.e",
+     "texto": "Se han descrito los tratamientos preventivos que deben recibir los potros y las yeguas en esta fase, que no precisen medicamentos veterinarios.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A1.2",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.f",
+     "texto": "Se han controlado las operaciones de identificación animal específicas para équidos, distintas de la electrónica.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A1.5",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.g",
+     "texto": "Se han organizado y coordinado los recursos humanos y materiales.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A1.6",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.h",
+     "texto": "Se ha aplicado la normativa ambiental, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A1.7",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.a",
+     "texto": "Se ha supervisado la conducta de las yeguas tras la separación de las rastras.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A2.1",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.b",
+     "texto": "Se ha controlado el traslado de las yeguas.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A2.2",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.c",
+     "texto": "Se ha controlado la reintegración de las yeguas en la piara.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A2.3",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.d",
+     "texto": "Se ha revisado el estado sanitario de las yeguas explicándose la función del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A2.4",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.e",
+     "texto": "Se ha adaptado la alimentación de las yeguas a las nuevas condiciones.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A2.5",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.f",
+     "texto": "Se han organizado y coordinado los recursos humanos y materiales.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A2.6",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.g",
+     "texto": "Se ha aplicado la normativa ambiental, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A2.7",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.a",
+     "texto": "Se han establecido las condiciones que deben reunir las instalaciones para la recría.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A3.1",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.b",
+     "texto": "Se han revisado los alojamientos equinos.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A3.2",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.c",
+     "texto": "Se han comprobado los medios, los equipos y las instalaciones para esta fase.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A3.3",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.d",
+     "texto": "Se ha establecido el plan de alimentación en esta fase.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A3.4",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.e",
+     "texto": "Se han supervisado las operaciones de alimentación en la recría.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A3.5",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.f",
+     "texto": "Se han organizado y coordinado los recursos humanos y materiales.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A3.6",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.g",
+     "texto": "Se ha aplicado la normativa ambiental, la de sanidad y bienestar animal, y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A3.1",
+     "ut": "UT3",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.a",
+     "texto": "Se han inspeccionado las condiciones del lugar en que se realizará el amansamiento.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.1",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.b",
+     "texto": "Se ha supervisado la aproximación progresiva al potro.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.2",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.c",
+     "texto": "Se ha determinado el momento para iniciar el amansamiento.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A5.3",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.d",
+     "texto": "Se han comprobado los medios y materiales utilizados en el amansamiento.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A5.4",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.e",
+     "texto": "Se han supervisado las operaciones de amansamiento.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A5.5",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.f",
+     "texto": "Se ha valorado la influencia del amansamiento en el comportamiento posterior y en el manejo del potro.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A5.3",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.g",
+     "texto": "Se ha efectuado la primera selección de potros, siguiendo los criterios establecidos.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A5.6",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.h",
+     "texto": "Se ha gestionado la documentación de control de la fase de recría.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A5.7",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.i",
+     "texto": "Se han organizado y coordinado los recursos humanos y materiales.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A5.8",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.j",
+     "texto": "Se ha aplicado la normativa ambiental, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A5.9",
+     "ut": "UT5",
+     "ev": 3
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.a",
+     "texto": "Se ha controlado la incorporación de los potros a la recría.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.1",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.b",
+     "texto": "Se ha valorado la acomodación de los potros a la nueva situación.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.2",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.c",
+     "texto": "Se han elaborado las raciones para los potros conforme a las necesidades de los animales en este periodo.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A4.3",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.d PP",
+     "texto": "Se ha examinado el estado sanitario de los potros explicándose la función del facultativo veterinario.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A4.4",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.d PE",
+     "texto": "Se ha examinado el estado sanitario de los potros explicándose la función del facultativo veterinario.",
+     "peso": 0.05,
+     "instrumento": "PE",
+     "actividad": "A4.4 / A4.6",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.e",
+     "texto": "Se ha controlado la higiene y los cuidados básicos.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A4.5",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.f",
+     "texto": "Se ha supervisado la administración de tratamientos preventivos, que no precisen medicamentos veterinarios.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A4.6",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.g",
+     "texto": "Se ha registrado la información correspondiente a cada animal.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.7",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.h",
+     "texto": "Se han organizado y coordinado los recursos humanos y materiales.",
+     "peso": 0.05,
+     "instrumento": "TP",
+     "actividad": "A4.8",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A4.9",
+     "ut": "UT4",
+     "ev": 2
+    }
+   ]
+  },
+  {
+   "codigo": "1279",
+   "nombre": "Saneamiento ganadero",
+   "grupo": "G2",
+   "horas": 136.5,
+   "pctFaltas": 0.3,
+   "evaluaciones": 2,
+   "pesoFC": 0.8,
+   "pesoFE": 0.2,
+   "libretaImprescindible": true,
+   "ra": [
+    {
+     "codigo": "RA1",
+     "texto": "Gestiona la agenda de trabajo para programas sanitarios, interpretando los protocolos establecidos.",
+     "peso": 0.2,
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "codigo": "RA2",
+     "texto": "Colabora en el desarrollo de programas sanitarios preventivos en las explotaciones ganaderas, describiendo el proceso de aplicación.",
+     "peso": 0.3,
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "codigo": "RA3",
+     "texto": "Recoge muestras biológicas, ambientales y de piensos y realiza análisis rápidos, describiendo los materiales y las técnicas empleadas.",
+     "peso": 0.2,
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "codigo": "RA4",
+     "texto": "Recoge y procesa los datos de explotaciones ganaderas, analizando la información sanitaria disponible.",
+     "peso": 0.2,
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "codigo": "RA5",
+     "texto": "Realiza estudios estadísticos sanitarios en explotaciones ganaderas, relacionándolos con los programas sanitarios aplicados.",
+     "peso": 0.1,
+     "ut": "UT5",
+     "ev": 2
+    }
+   ],
+   "ce": [
+    {
+     "ra": "RA1",
+     "codigo": "1.a",
+     "texto": "Se ha identificado el estado sanitario de la explotación, explicándose la función del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A1.1",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.b",
+     "texto": "Se han caracterizado los animales objeto de los programas vacunales y antiparasitarios, según el programa sanitario elaborado por el veterinario correspondiente, la especie ganadera y las condiciones sanitarias de la explotación.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A1.2",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.c",
+     "texto": "Se han anotado las actuaciones que se deben realizar para el desarrollo de los programas sanitarios.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.d",
+     "texto": "Se han descrito los canales de comunicación en las notificaciones a las explotaciones.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A1.1",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.e",
+     "texto": "Se han registrado los datos obtenidos de las visitas a la explotación.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A1.4",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.f",
+     "texto": "Se han utilizado las tecnologías de la información y la comunicación.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A1.3",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA1",
+     "codigo": "1.g",
+     "texto": "Se ha aplicado la normativa de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A1.5",
+     "ut": "UT1",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.a",
+     "texto": "Se han organizado los medios para la aplicación de programas sanitarios.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A2.1",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.b",
+     "texto": "Se han aplicado los tratamientos de secado en explotaciones lecheras bajo supervisión veterinaria.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A2.2",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.c",
+     "texto": "Se han preparado y aplicado repelentes o productos para desinsectación, explicándose la función del facultativo veterinario en el caso de que sean medicamentos.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A2.3",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.d",
+     "texto": "Se han preparado las vacunas para su aplicación por parte del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A2.4",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.e",
+     "texto": "Se han aplicado los tratamientos medicamentosos colectivos, explicándose la función del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A2.5 / A2.9",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.f",
+     "texto": "Se ha planificado y realizado el vacío sanitario de los alojamientos ganaderos.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A2.6",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.g",
+     "texto": "Se han registrado y notificado los periodos de supresión de los medicamentos veterinarios prescritos.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A2.7 / A2.9",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.h",
+     "texto": "Se han eliminado, según el protocolo, los residuos sanitarios, los envases y otros materiales de desecho para su procesado.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A2.8",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA2",
+     "codigo": "2.i",
+     "texto": "Se ha aplicado la normativa ambiental, la de seguridad alimentaria, la de sanidad y bienestar animal y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A2.9",
+     "ut": "UT2",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.a",
+     "texto": "Se han preparado los recipientes, los tubos y otros materiales establecidos para la toma de las muestras.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A3.1",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.b",
+     "texto": "Se ha manejado o inmovilizado al animal para la extracción de la muestra.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A3.2",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.c",
+     "texto": "Se ha realizado la extracción de la sangre explicándose la función del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A3.3",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.d PP",
+     "texto": "Se han tomado muestras de heces, orina, agua, leche, pienso o animales muertos o sacrificados, explicándose la función del facultativo veterinario, y según el método establecido para cada tipo de muestra. (Parte práctica del CE desdoblado)",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A3.4",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.d PE",
+     "texto": "Se han tomado muestras de heces, orina, agua, leche, pienso o animales muertos o sacrificados, explicándose la función del facultativo veterinario, y según el método establecido para cada tipo de muestra. (Parte escrita del CE desdoblado)",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A3.8",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.e",
+     "texto": "Se han procesado y etiquetado las muestras.",
+     "peso": 0.1,
+     "instrumento": "PP",
+     "actividad": "A3.5",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.f",
+     "texto": "Se han realizado análisis rápidos de muestras para remitir el resultado al facultativo.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A3.6",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.g",
+     "texto": "Se han registrado, manualmente o mediante medios informáticos, los resultados de los análisis en el historial de la explotación.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A3.7",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA3",
+     "codigo": "3.h",
+     "texto": "Se ha aplicado la normativa ambiental, la de seguridad alimentaria, la de sanidad y bienestar animal, y la de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A3.8",
+     "ut": "UT3",
+     "ev": 1
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.a",
+     "texto": "Se ha descrito la calificación sanitaria de las explotaciones, explicándose la función del facultativo veterinario.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A4.1",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.b",
+     "texto": "Se han anotado los datos de las actuaciones sanitarias.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.2",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.c",
+     "texto": "Se han registrado los medicamentos empleados, indicando dosis, número de lote y fechas de caducidad.",
+     "peso": 0.15,
+     "instrumento": "PP",
+     "actividad": "A4.3",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.d",
+     "texto": "Se han recogido los datos de los resultados de las analíticas.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.4",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.e",
+     "texto": "Se han reflejado las patologías presentes en la explotación y las indicaciones del facultativo veterinario.",
+     "peso": 0.1,
+     "instrumento": "TP",
+     "actividad": "A4.5",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.f",
+     "texto": "Se han registrado las anomalías sanitarias detectadas en la explotación y las notificaciones.",
+     "peso": 0.1,
+     "instrumento": "PE",
+     "actividad": "A4.1",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.g",
+     "texto": "Se han elaborado informes y memorias.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A4.6",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA4",
+     "codigo": "4.h",
+     "texto": "Se ha aplicado la normativa de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A4.7",
+     "ut": "UT4",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.a",
+     "texto": "Se han organizado los datos.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A5.1",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.b",
+     "texto": "Se han caracterizado los principales métodos informáticos para el análisis estadístico.",
+     "peso": 0.15,
+     "instrumento": "PE",
+     "actividad": "A5.2",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.c",
+     "texto": "Se han procesado los datos mediante métodos informáticos.",
+     "peso": 0.25,
+     "instrumento": "PP",
+     "actividad": "A5.3",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.d",
+     "texto": "Se han elaborado informes estadísticos para su valoración por parte del facultativo.",
+     "peso": 0.2,
+     "instrumento": "TP",
+     "actividad": "A5.4",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.e",
+     "texto": "Se ha elaborado una memoria de las actividades.",
+     "peso": 0.15,
+     "instrumento": "TP",
+     "actividad": "A5.5",
+     "ut": "UT5",
+     "ev": 2
+    },
+    {
+     "ra": "RA5",
+     "codigo": "5.f",
+     "texto": "Se ha aplicado la normativa de prevención de riesgos laborales.",
+     "peso": 0.1,
+     "instrumento": "OD",
+     "actividad": "A5.6",
+     "ut": "UT5",
+     "ev": 2
+    }
+   ]
+  }
+ ],
+ "horario": [
+  {
+   "dia": 1,
+   "inicio": "8:30",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 2,
+   "inicio": "8:30",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 4,
+   "inicio": "8:30",
+   "tipo": "modulo",
+   "modulo": "1276",
+   "texto": "G.R.C"
+  },
+  {
+   "dia": 5,
+   "inicio": "8:30",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 1,
+   "inicio": "9:25",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 2,
+   "inicio": "9:25",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 3,
+   "inicio": "9:25",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 4,
+   "inicio": "9:25",
+   "tipo": "modulo",
+   "modulo": "1276",
+   "texto": "G.R.C"
+  },
+  {
+   "dia": 5,
+   "inicio": "9:25",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 1,
+   "inicio": "10:20",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 2,
+   "inicio": "10:20",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 3,
+   "inicio": "10:20",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 4,
+   "inicio": "10:20",
+   "tipo": "modulo",
+   "modulo": "1276",
+   "texto": "G.R.C"
+  },
+  {
+   "dia": 5,
+   "inicio": "10:20",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 1,
+   "inicio": "11:45",
+   "tipo": "modulo",
+   "modulo": "1276",
+   "texto": "G.R.C"
+  },
+  {
+   "dia": 2,
+   "inicio": "11:45",
+   "tipo": "otro",
+   "modulo": null,
+   "texto": "GUARDIA"
+  },
+  {
+   "dia": 3,
+   "inicio": "11:45",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 4,
+   "inicio": "11:45",
+   "tipo": "otro",
+   "modulo": null,
+   "texto": "GUARDIA"
+  },
+  {
+   "dia": 5,
+   "inicio": "11:45",
+   "tipo": "modulo",
+   "modulo": "1279",
+   "texto": "S.G."
+  },
+  {
+   "dia": 1,
+   "inicio": "12:40",
+   "tipo": "modulo",
+   "modulo": "1274",
+   "texto": "O.C.R.C."
+  },
+  {
+   "dia": 1,
+   "inicio": "13:35",
+   "tipo": "otro",
+   "modulo": null,
+   "texto": "GUARDIA"
+  }
+ ],
+ "encargadoItems": [
+  "Iniciativa",
+  "Objetividad en la valoración de compañeros. Capacidad de reorganización",
+  "Redacción de la práctica",
+  "Relaciona con conocimientos teóricos. Presentación de la práctica",
+  "Explica con claridad las tareas. Educación y habilidad social"
+ ],
+ "libretaApartados": [
+  {
+   "nombre": "Redacción / lenguaje técnico",
+   "peso": 0.25
+  },
+  {
+   "nombre": "Limpieza / claridad",
+   "peso": 0.25
+  },
+  {
+   "nombre": "Datos",
+   "peso": 0.25
+  },
+  {
+   "nombre": "Ortografía",
+   "peso": 0.25
+  }
+ ],
+ "tiposAnotacion": [
+  "Retraso",
+  "Observación de clase",
+  "Incidencia",
+  "Entrega de trabajo",
+  "Prevención de riesgos (PRL)",
+  "Bienestar animal",
+  "Charla con el alumno",
+  "Otra"
+ ]
+}
