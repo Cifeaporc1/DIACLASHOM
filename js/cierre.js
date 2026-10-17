@@ -1,7 +1,7 @@
 // Fase 4: faltas por evaluación, recuperaciones, fase de empresa y nota final.
 import * as D from './datos.js';
 import * as N from './notas.js';
-import { esc, num, modulo, grupo, alumnosDe, alumno, listas, ir, diferido, evTexto, etiqueta } from './util.js';
+import { esc, num, modulo, grupo, alumnosDe, alumno, listas, ir, diferido, evTexto, etiqueta, nombre, nombreHTML } from './util.js';
 
 let marco = null;
 export function configurar(opciones) {
@@ -57,7 +57,7 @@ export function vistaFaltas(id) {
   }
   $('#f-filas').innerHTML = alumnosDe(m.grupo).map((a) => {
     const f = r.filas[a.clave] || {};
-    return `<tr data-fila="${esc(a.clave)}"><th scope="row">${esc(a.clave)}</th>
+    return `<tr data-fila="${esc(a.clave)}"><th scope="row">${nombreHTML(a.clave)}</th>
       <td><input type="text" inputmode="decimal" class="nota" data-clave="${esc(a.clave)}" data-campo="injustificadas" value="${esc(f.injustificadas ?? '')}"></td>
       <td><input type="text" inputmode="decimal" class="nota" data-clave="${esc(a.clave)}" data-campo="justificadas" value="${esc(f.justificadas ?? '')}"></td>
       ${celdas(a.clave)}</tr>`;
@@ -97,7 +97,7 @@ export function vistaFinal(codigoModulo) {
     <div class="tabla-notas resumen"><table>
       <thead><tr><th>Alumno</th><th>Final</th><th>FC real</th><th>FC</th><th>Empresa</th><th>Caso</th><th>Propuesta</th><th>MH</th></tr></thead>
       <tbody>${filas.map(({ a, f }) => `<tr data-ir="#/final-alumno/${esc(m.codigo)}/${esc(a.clave)}">
-        <th scope="row"><a href="#/final-alumno/${esc(m.codigo)}/${esc(a.clave)}">${esc(a.clave)}</a></th>
+        <th scope="row"><a href="#/final-alumno/${esc(m.codigo)}/${esc(a.clave)}">${nombreHTML(a.clave)}</a></th>
         <td><strong>${f.consignada ?? (f.propuesta !== null ? `<span class="sub" style="display:inline">${f.propuesta}?</span>` : '')}</strong></td>
         <td>${fmt(f.fcReal)}</td>
         <td class="${f.fcBoletin !== null && f.fcBoletin < 5 ? 'bajo' : ''}">${f.fcBoletin ?? (f.completa ? '—' : '<small>faltan RA</small>')}</td>
@@ -108,7 +108,7 @@ export function vistaFinal(codigoModulo) {
       </tr>`).join('')}</tbody>
     </table></div>
     <p class="ayuda">Final: la nota que has consignado; con «?», la propuesta aún sin consignar. Toca un alumno para poner recuperaciones, empresa y nota.</p>
-    ${candidatos.length ? `<div class="mensaje info">Candidatos a mención honorífica (nota 10 sin RA recuperados), ordenados por la media de RA sin redondear: ${candidatos.map((x) => `${esc(x.a.clave)} (${fmt(x.f.mediaRA, 3)})`).join(', ')}. Máximo ${maxMH} en este grupo (10 %).</div>` : ''}
+    ${candidatos.length ? `<div class="mensaje info">Candidatos a mención honorífica (nota 10 sin RA recuperados), ordenados por la media de RA sin redondear: ${candidatos.map((x) => `${esc(nombre(x.a.clave))} (${fmt(x.f.mediaRA, 3)})`).join(', ')}. Máximo ${maxMH} en este grupo (10 %).</div>` : ''}
   `, { volver: '#/notas', pestana: 'notas' });
   $$('tr[data-ir]').forEach((tr) => tr.addEventListener('click', (ev) => { if (ev.target.tagName !== 'A') ir(tr.dataset.ir); }));
 }
@@ -128,7 +128,7 @@ export function vistaFinalAlumno(codigoModulo, clave) {
   const feValor = actual.fe ?? '';
   const feModo = feValor === 'exento' || feValor === 'nocursa' ? feValor : '';
 
-  marco(`Final · ${clave} · ${etiqueta(m.codigo)}`, `
+  marco(`Final · ${nombre(clave)} · ${etiqueta(m.codigo)}`, `
     <div class="tarjeta notas-cabecera" id="cab-final"></div>
     <div id="avisos-final"></div>
     <h2>Resultados de aprendizaje</h2>

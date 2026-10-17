@@ -58,7 +58,7 @@ export function modulosDeGrupo(codigoGrupo) {
   return modulos().filter((m) => m.grupo === codigoGrupo);
 }
 export function alumnosDe(codigoGrupo) {
-  return D.porTipo('alumno').filter((a) => a.grupo === codigoGrupo).sort((a, b) => a.orden - b.orden);
+  return D.porTipo('alumno').filter((a) => a.grupo === codigoGrupo && a.activo !== false).sort((a, b) => a.orden - b.orden);
 }
 export function alumno(clave) {
   return D.porTipo('alumno').find((a) => a.clave === clave);
@@ -107,4 +107,53 @@ export function etiqueta(codigo) {
 }
 export function etiquetas(codigos, sep = ' + ') {
   return (codigos || []).map(etiqueta).join(sep);
+}
+
+// ---------- Nombres de alumnos ----------
+// Los nombres viven cifrados en el registro de cada alumno (apellido1, apellido2, nombre).
+// La clave (ALUPRIGASA1…) sigue siendo el identificador interno de todo lo apuntado.
+
+const OCULTAR = 'diaclashom-ocultar-nombres';
+export function nombresOcultos() {
+  try { return localStorage.getItem(OCULTAR) === '1'; } catch { return false; }
+}
+export function alternarNombres() {
+  try { localStorage.setItem(OCULTAR, nombresOcultos() ? '0' : '1'); } catch { /* sin almacenamiento: no se recuerda */ }
+}
+
+const PARTICULAS = new Set(['de', 'del', 'la', 'las', 'los', 'y', 'e', 'da', 'do', 'dos', 'van', 'von']);
+export function capitalizar(texto) {
+  return String(texto || '').trim().toLowerCase().split(/(\s+|-)/).map((p, i) => {
+    if (/^\s+$|^-$/.test(p) || !p) return p;
+    if (i > 0 && PARTICULAS.has(p)) return p;
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }).join('');
+}
+export function nombreCompleto(a) {
+  if (!a || (!a.apellido1 && !a.nombre)) return '';
+  const ap = [a.apellido1, a.apellido2].filter(Boolean).map(capitalizar).join(' ');
+  return a.nombre ? `${ap}, ${capitalizar(a.nombre)}` : ap;
+}
+// Texto para mostrar: nombre si lo hay y no están ocultos; si no, la clave.
+export function nombre(clave) {
+  const a = alumno(clave);
+  if (!a || nombresOcultos()) return clave;
+  return nombreCompleto(a) || clave;
+}
+export function nombreHTML(clave) {
+  const a = alumno(clave);
+  const n = nombre(clave);
+  if (n === clave || !a) return esc(clave);
+  return `${esc(n)} <small class="clave-peq">${a.orden}</small>`;
+}
+export function compararNombres(x, y) {
+  const c = (a, b) => String(a || '').localeCompare(String(b || ''), 'es', { sensitivity: 'base' });
+  return c(x.apellido1, y.apellido1) || c(x.apellido2, y.apellido2) || c(x.nombre, y.nombre);
+}
+// Versión corta para listas estrechas: «Ana López». Mantiene el orden por apellidos de la lista.
+export function nombreCortoHTML(clave) {
+  const a = alumno(clave);
+  if (!a || nombresOcultos() || (!a.nombre && !a.apellido1)) return esc(clave);
+  const corto = [capitalizar(String(a.nombre || '').split(/\s+/)[0]), capitalizar(a.apellido1)].filter(Boolean).join(' ');
+  return `${esc(corto)} <small class="clave-peq">${a.orden}</small>`;
 }

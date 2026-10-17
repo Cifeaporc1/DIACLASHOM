@@ -1,7 +1,8 @@
 // Interfaz de DIACLASHOM: acceso, marco, módulos, alumnos, ajustes y enrutado.
 import * as D from './datos.js';
 import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
-import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta } from './util.js';
+import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta, nombreHTML, nombresOcultos, alternarNombres } from './util.js';
+import * as Nombres from './nombres.js';
 import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
 import * as Cierre from './cierre.js';
@@ -138,6 +139,7 @@ function marco(titulo, cuerpo, { volver = null, pestana = null, editable = false
       <header class="cabecera">
         <div class="barra-marca">
           <a href="#/hoy" class="marca-mini"><img src="iconos/logo-mini.png" alt="" width="40" height="40"><span>DIACLASHOM</span></a>
+          <button class="estado-sync ojo ${nombresOcultos() ? 'activo' : ''}" type="button" id="b-ojo" title="${nombresOcultos() ? 'Mostrar nombres' : 'Ocultar nombres'}" aria-pressed="${nombresOcultos()}">${nombresOcultos() ? 'Claves' : 'Nombres'}</button>
           <button class="estado-sync ${s.clase}" type="button" id="b-sync" title="Sincronizar ahora"><i></i>${esc(s.texto)}</button>
         </div>
         <div class="barra-titulo">
@@ -152,6 +154,7 @@ function marco(titulo, cuerpo, { volver = null, pestana = null, editable = false
     </div>`;
   raiz.querySelector('[data-volver]')?.addEventListener('click', (e) => { location.hash = e.currentTarget.dataset.volver; });
   document.getElementById('b-sync').addEventListener('click', () => D.sincronizar());
+  document.getElementById('b-ojo').addEventListener('click', () => { alternarNombres(); pintar(); });
 }
 
 // ---------- Módulos ----------
@@ -209,8 +212,8 @@ function vistaAlumnos() {
   const alumnos = alumnosDe(grupoElegido);
   marco('Alumnos', `
     <div class="segmento">${grupos.map((g) => `<button type="button" data-grupo="${esc(g.codigo)}" class="${g.codigo === grupoElegido ? 'activo' : ''}">${esc(g.nombre)}</button>`).join('')}</div>
-    <p class="sub" style="color:var(--texto-suave);margin:0 0 12px">${alumnos.length} alumnos · solo claves, sin nombres</p>
-    <div class="rejilla-claves">${alumnos.map((a) => `<a href="#/alumno/${esc(a.clave)}">${esc(a.clave)}</a>`).join('')}</div>
+    <p class="sub" style="color:var(--texto-suave);margin:0 0 12px">${alumnos.length} alumnos${nombresOcultos() ? ' · nombres ocultos' : ''}</p>
+    <div class="rejilla-claves">${alumnos.map((a) => `<a href="#/alumno/${esc(a.clave)}">${nombreHTML(a.clave)}</a>`).join('')}</div>
   `, { pestana: 'alumnos' });
   raiz.querySelectorAll('[data-grupo]').forEach((b) => b.addEventListener('click', () => { grupoElegido = b.dataset.grupo; vistaAlumnos(); }));
 }
@@ -225,9 +228,12 @@ async function vistaAjustes() {
   marco('Más', `
     <h2>Exportar</h2>
     <div class="tarjeta botones">
-      <button class="boton" type="button" id="b-excel">Descargar Excel con todos los datos</button>
-      <p class="sub" style="margin:0">Se genera en este aparato. El archivo no va cifrado: guárdalo como un documento de evaluación.</p>
+      <button class="boton" type="button" id="b-excel">Descargar Excel (solo claves)</button>
+      <button class="boton secundario" type="button" id="b-excel-nombres">Descargar Excel con nombres</button>
+      <p class="sub" style="margin:0">Se genera en este aparato. El archivo no va cifrado: el que lleva nombres, guárdalo solo en tus aparatos.</p>
     </div>
+    <h2>Alumnos</h2>
+    <a class="tarjeta" href="#/nombres"><div class="titulo">Nombres de alumnos</div><div class="sub">${D.porTipo('alumno').filter((a) => a.apellido1 || a.nombre).length} de ${D.porTipo('alumno').filter((a) => a.activo !== false).length} con nombre · importar desde Excel</div></a>
     <h2>Organización</h2>
     <a class="tarjeta" href="#/reuniones"><div class="titulo">Reuniones y tareas</div><div class="sub">Departamento, claustros, equipos docentes y lo que te toca hacer</div></a>
     <h2>Programación</h2>
@@ -259,14 +265,17 @@ async function vistaAjustes() {
   document.getElementById('b-sincronizar').addEventListener('click', () => D.sincronizar());
   document.getElementById('b-bloquear').addEventListener('click', () => { D.bloquear(); });
   document.getElementById('b-copia').addEventListener('click', descargarCopia);
-  document.getElementById('b-excel').addEventListener('click', async (ev) => {
-    const b = ev.currentTarget;
-    b.disabled = true;
-    b.textContent = 'Preparando el Excel…';
-    try { await Exportar.descargarExcel(); } catch (e) { alert(`No se ha podido generar el Excel: ${e.message}`); }
-    b.disabled = false;
-    b.textContent = 'Descargar Excel con todos los datos';
-  });
+  for (const [id, conNombres] of [['b-excel', false], ['b-excel-nombres', true]]) {
+    document.getElementById(id).addEventListener('click', async (ev) => {
+      const b = ev.currentTarget;
+      const texto = b.textContent;
+      b.disabled = true;
+      b.textContent = 'Preparando el Excel…';
+      try { await Exportar.descargarExcel({ conNombres }); } catch (e) { alert(`No se ha podido generar el Excel: ${e.message}`); }
+      b.disabled = false;
+      b.textContent = texto;
+    });
+  }
   document.getElementById('b-olvidar').addEventListener('click', async () => {
     const pendientes = await D.pendientes();
     const extra = pendientes ? ` Hay ${pendientes} cambios sin subir que se perderán.` : '';
@@ -317,6 +326,7 @@ async function pintar() {
       case 'modulo': return vistaModulo(param);
       case 'alumnos': return vistaAlumnos();
       case 'alumno': return Diario.vistaAlumno(param);
+      case 'nombres': return Nombres.vistaNombres();
       case 'ajustes': return await vistaAjustes();
       default: return Diario.vistaHoy();
     }
@@ -367,4 +377,5 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 Diario.configurar({ marco });
 Calificar.configurar({ marco });
 Cierre.configurar({ marco });
+Nombres.configurar({ marco });
 pintar();

@@ -4,7 +4,7 @@ import * as Calificar from './calificar.js';
 import {
   esc, hoyISO, aFecha, fechaLarga, fechaCorta, minutos, hhmm, horaInput, horaCorta,
   modulo, grupo, grupos, modulos, modulosDeGrupo, alumnosDe, alumno, utsDe, listas,
-  ir, primeraLinea, diferido, etiqueta, etiquetas,
+  ir, primeraLinea, diferido, etiqueta, etiquetas, nombre, nombreHTML, nombreCortoHTML,
 } from './util.js';
 
 let marco = null;
@@ -304,7 +304,7 @@ export function vistaSesion(id) {
     }
     caja.innerHTML = `<ul class="lista marcas">${alumnosDe(g).map((a) => `
       <li class="item">
-        <a class="crece clave" href="#/alumno/${esc(a.clave)}">${esc(a.clave)}</a>
+        <a class="crece clave" href="#/alumno/${esc(a.clave)}" title="${esc(nombre(a.clave))}">${nombreCortoHTML(a.clave)}</a>
         ${MARCAS.map(([k, t, simbolo]) => `<button type="button" class="marca ${k} ${s.marcas[a.clave] === k ? 'activo' : ''}" data-clave="${esc(a.clave)}" data-marca="${k}" aria-pressed="${s.marcas[a.clave] === k}" title="${esc(t)}"><span aria-hidden="true">${simbolo}</span><span class="txt">${esc(t)}</span></button>`).join('')}
       </li>`).join('')}</ul>`;
     caja.querySelectorAll('.marca').forEach((b) => b.addEventListener('click', () => {
@@ -393,7 +393,7 @@ export function vistaSesion(id) {
 
 function filaAnotacion(a) {
   return `<li><a href="#/anotacion/${esc(a.id)}">
-    <span class="crece"><strong>${esc(a.clave || 'Toda la clase')}</strong> · ${esc(a.categoria || '')}
+    <span class="crece"><strong>${a.clave ? esc(nombre(a.clave)) : 'Toda la clase'}</strong> · ${esc(a.categoria || '')}
       <span class="sub">${esc(fechaCorta(a.fecha))}${a.modulo ? ' · ' + esc(etiqueta(a.modulo)) : ''} · ${esc(primeraLinea(a.texto, 70))}</span>
     </span></a></li>`;
 }
@@ -432,7 +432,7 @@ export function vistaAnotacion(id, q) {
   const f = $('#f-anot');
   function pintarSelects() {
     const g = $('#a-grupo').value;
-    $('#a-clave').innerHTML = `<option value="">Toda la clase</option>${alumnosDe(g).map((x) => `<option ${x.clave === a.clave ? 'selected' : ''}>${esc(x.clave)}</option>`).join('')}`;
+    $('#a-clave').innerHTML = `<option value="">Toda la clase</option>${alumnosDe(g).map((x) => `<option value="${esc(x.clave)}" ${x.clave === a.clave ? 'selected' : ''}>${esc(nombre(x.clave))}</option>`).join('')}`;
     $('#a-modulo').innerHTML = `<option value="">—</option>${modulosDeGrupo(g).map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === a.modulo ? 'selected' : ''}>${esc(etiqueta(m.codigo))} · ${esc(m.nombre)}</option>`).join('')}`;
   }
   $('#a-grupo').addEventListener('change', pintarSelects);
@@ -458,10 +458,10 @@ export function vistaCharla(id, q) {
   const c = existente || { tipo: 'charla', fecha: hoyISO(), clave: q.clave || '', motivo: '', contenido: '', acuerdos: '' };
   const al = alumno(c.clave);
   const volver = `#/alumno/${c.clave}`;
-  marco(existente ? `Charla · ${c.clave}` : `Nueva charla · ${c.clave}`, `
+  marco(existente ? `Charla · ${nombre(c.clave)}` : `Nueva charla · ${nombre(c.clave)}`, `
     <form id="f-charla" class="formulario">
       <label class="campo"><span>Fecha</span><input type="date" name="fecha" value="${esc(c.fecha)}" required></label>
-      ${al ? '' : `<label class="campo"><span>Alumno</span><select name="clave">${grupos().map((g) => `<optgroup label="${esc(g.nombre)}">${alumnosDe(g.codigo).map((x) => `<option>${esc(x.clave)}</option>`).join('')}</optgroup>`).join('')}</select></label>`}
+      ${al ? '' : `<label class="campo"><span>Alumno</span><select name="clave">${grupos().map((g) => `<optgroup label="${esc(g.nombre)}">${alumnosDe(g.codigo).map((x) => `<option value="${esc(x.clave)}">${esc(nombre(x.clave))}</option>`).join('')}</optgroup>`).join('')}</select></label>`}
       <label class="campo"><span>Motivo</span><input type="text" name="motivo" value="${esc(c.motivo)}" placeholder="Por qué habéis hablado"></label>
       <label class="campo"><span>De qué habéis hablado</span><textarea name="contenido" rows="6" required>${esc(c.contenido)}</textarea></label>
       <label class="campo"><span>Acuerdos</span><textarea name="acuerdos" rows="3">${esc(c.acuerdos)}</textarea></label>
@@ -497,14 +497,27 @@ export function vistaAlumno(clave) {
   const charlas = D.porTipo('charla').filter((c) => c.clave === clave).sort((x, y) => y.fecha.localeCompare(x.fecha));
   const anotaciones = D.porTipo('anotacion').filter((x) => x.clave === clave).sort((x, y) => y.fecha.localeCompare(x.fecha));
 
-  marco(a.clave, `
+  marco(nombre(a.clave), `
     <div class="tarjeta">
       <dl class="datos">
+        <dt>Clave</dt><dd>${esc(a.clave)}</dd>
         <dt>Grupo</dt><dd>${esc(grupo(a.grupo)?.nombre || '')}</dd>
         <dt>Número de lista</dt><dd>${a.orden}</dd>
         <dt>Módulos</dt><dd>${mods.map((m) => esc(etiqueta(m.codigo))).join(' · ')}</dd>
       </dl>
     </div>
+
+    <details class="tarjeta editar-nombre">
+      <summary>Editar nombre</summary>
+      <form id="f-nombre" class="formulario" style="margin-top:12px">
+        <div class="rejilla-2">
+          <label class="campo"><span>Primer apellido</span><input type="text" name="apellido1" value="${esc(a.apellido1 || '')}"></label>
+          <label class="campo"><span>Segundo apellido</span><input type="text" name="apellido2" value="${esc(a.apellido2 || '')}"></label>
+        </div>
+        <label class="campo"><span>Nombre</span><input type="text" name="nombre" value="${esc(a.nombre || '')}"></label>
+        <button class="boton" type="submit">Guardar nombre</button>
+      </form>
+    </details>
 
     <h2>Notas</h2>
     ${Calificar.resumenAlumno(clave)}
@@ -531,6 +544,15 @@ export function vistaAlumno(clave) {
     </div>
 
   `, { volver: '#/alumnos', pestana: 'alumnos' });
+  $('#f-nombre').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    a.apellido1 = fd.get('apellido1').trim();
+    a.apellido2 = fd.get('apellido2').trim();
+    a.nombre = fd.get('nombre').trim();
+    await D.guardar(a);
+    vistaAlumno(clave);
+  });
 }
 
 // ---------- Reuniones ----------

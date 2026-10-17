@@ -2,11 +2,13 @@
 // Cada hoja es una tabla de «una fila por registro», con filtros, para ordenar y filtrar en Excel.
 import * as D from './datos.js';
 import * as N from './notas.js';
-import { modulo, modulos, alumnosDe, grupo, listas, etiqueta, etiquetas, hoyISO } from './util.js';
+import { modulo, modulos, alumnosDe, alumno, grupo, listas, etiqueta, etiquetas, hoyISO, nombreCompleto } from './util.js';
 import { TIPOS_SESION, MARCAS } from './diario.js';
 
 let cargando = null;
-function cargarSheetJS() {
+let conNombres = false;
+const al = (clave) => (clave && conNombres ? nombreCompleto(alumno(clave)) || clave : clave);
+export function cargarSheetJS() {
   if (window.XLSX) return Promise.resolve(window.XLSX);
   if (!cargando) {
     cargando = new Promise((resolver, rechazar) => {
@@ -30,7 +32,8 @@ const VALORACIONES = ['', 'Mal', 'Regular', 'Bien', 'Muy bien', 'Excelente'];
 const porFecha = (a, b) => String(a.fecha || '').localeCompare(String(b.fecha || ''));
 const ceDe = (codigoModulo, codigoCE) => modulo(codigoModulo)?.ce.find((c) => c.codigo === codigoCE);
 
-export function construirHojas() {
+export function construirHojas(opciones = {}) {
+  conNombres = !!opciones.conNombres;
   const ctx = N.contexto(D.porTipo, listas());
   const items = listas().encargadoItems || [];
   const apartados = listas().libretaApartados || [];
@@ -50,7 +53,7 @@ export function construirHojas() {
 
   const marcas = [];
   for (const s of sesiones) for (const [clave, k] of Object.entries(s.marcas || {})) {
-    marcas.push({ Fecha: fecha(s.fecha), 'Módulos': etiquetas(s.modulos), Tipo: nombreTipo(s.clase), UT: s.ut || '', Alumno: clave, Marca: nombreMarca(k) });
+    marcas.push({ Fecha: fecha(s.fecha), 'Módulos': etiquetas(s.modulos), Tipo: nombreTipo(s.clase), UT: s.ut || '', Alumno: al(clave), Marca: nombreMarca(k) });
   }
   hojas.push(['Marcas en clase', marcas]);
 
@@ -61,7 +64,7 @@ export function construirHojas() {
     for (const [clave, f] of Object.entries(p.filas || {})) {
       const nEnc = f.rol === 'encargado' ? N.notaEncargado(f.items) : null;
       if (f.rol === 'encargado') {
-        const fila = { Fecha: fecha(p.fecha), 'Módulos': etiquetas(p.modulos), CE: (p.ces || []).map((c) => `${c.modulo} ${c.codigo}`).join(', '), Alumno: clave };
+        const fila = { Fecha: fecha(p.fecha), 'Módulos': etiquetas(p.modulos), CE: (p.ces || []).map((c) => `${c.modulo} ${c.codigo}`).join(', '), Alumno: al(clave) };
         items.forEach((it, i) => { fila[String(it).split(/[ .]/)[0]] = r2(f.items?.[i]); });
         fila.Media = r2(nEnc);
         encargado.push(fila);
@@ -76,7 +79,7 @@ export function construirHojas() {
         else if (f.rol === 'encargado') { nota = r2(nEnc); peso = 2; origen = 'Encargado'; }
         else nota = r2(f.valor);
         if (nota === '' && !f.asiste) continue;
-        notas.push({ Fecha: fecha(p.fecha), 'Módulo': etiqueta(c.modulo), 'Evaluación': ce?.ev || '', RA: ce?.ra || '', CE: c.codigo, Instrumento: 'PP', Alumno: clave, Origen: origen, Nota: nota, Peso: peso, Comentario: f.comentario || '' });
+        notas.push({ Fecha: fecha(p.fecha), 'Módulo': etiqueta(c.modulo), 'Evaluación': ce?.ev || '', RA: ce?.ra || '', CE: c.codigo, Instrumento: 'PP', Alumno: al(clave), Origen: origen, Nota: nota, Peso: peso, Comentario: f.comentario || '' });
       }
     }
   }
@@ -84,7 +87,7 @@ export function construirHojas() {
     for (const [clave, f] of Object.entries(c.filas || {})) {
       for (const [codigo, v] of Object.entries(f.notas || {})) {
         const ce = ceDe(c.modulo, codigo);
-        notas.push({ Fecha: fecha(c.fecha), 'Módulo': etiqueta(c.modulo), 'Evaluación': ce?.ev || '', RA: ce?.ra || '', CE: codigo, Instrumento: c.instrumento === 'EXP' ? 'PP (examen práctico)' : c.instrumento, Alumno: clave, Origen: c.titulo || N.INSTRUMENTOS[c.instrumento], Nota: r2(v), Peso: 1, Comentario: f.comentario || '' });
+        notas.push({ Fecha: fecha(c.fecha), 'Módulo': etiqueta(c.modulo), 'Evaluación': ce?.ev || '', RA: ce?.ra || '', CE: codigo, Instrumento: c.instrumento === 'EXP' ? 'PP (examen práctico)' : c.instrumento, Alumno: al(clave), Origen: c.titulo || N.INSTRUMENTOS[c.instrumento], Nota: r2(v), Peso: 1, Comentario: f.comentario || '' });
       }
     }
   }
@@ -96,7 +99,7 @@ export function construirHojas() {
     for (const a of alumnosDe(l.grupo)) {
       const f = l.filas?.[a.clave];
       if (!f) continue;
-      const fila = { Grupo: grupo(l.grupo)?.nombre || '', 'Evaluación': l.ev, Fecha: fecha(l.fecha), Alumno: a.clave, Entregada: f.entregada === true ? 'Sí' : f.entregada === false ? 'No' : '' };
+      const fila = { Grupo: grupo(l.grupo)?.nombre || '', 'Evaluación': l.ev, Fecha: fecha(l.fecha), Alumno: al(a.clave), Entregada: f.entregada === true ? 'Sí' : f.entregada === false ? 'No' : '' };
       apartados.forEach((ap, i) => { fila[String(ap.nombre).split(' /')[0]] = r2(f.apartados?.[i]); });
       fila.Nota = f.entregada === false ? 0 : r2(N.notaLibreta(f, apartados));
       fila.Comentario = f.comentario || '';
@@ -115,7 +118,7 @@ export function construirHojas() {
     for (const a of alumnosDe(m.grupo)) {
       for (let ev = 1; ev <= m.evaluaciones; ev++) {
         const e = N.notaEvaluacion(m, ev, a.clave, ctx);
-        const fila = { 'Módulo': etiqueta(m.codigo), 'Evaluación': ev, Alumno: a.clave, ...columnasRA() };
+        const fila = { 'Módulo': etiqueta(m.codigo), 'Evaluación': ev, Alumno: al(a.clave), ...columnasRA() };
         for (const r of e.ras) fila[r.codigo] = r2(r.valor);
         Object.assign(fila, {
           'Ajuste actitud': r2(e.ajuste) || '', 'Nota real': r2(e.real), 'Boletín': e.boletinTexto === '—' ? '' : e.boletinTexto,
@@ -124,10 +127,10 @@ export function construirHojas() {
         });
         evaluaciones.push(fila);
         const fa = N.faltasDe(m, ev, a.clave, ctx);
-        if (fa.injustificadas || fa.justificadas) faltas.push({ 'Módulo': etiqueta(m.codigo), 'Evaluación': ev, Alumno: a.clave, 'Sin justificar (h)': fa.injustificadas, 'Justificadas (h)': fa.justificadas, 'Acumulado (h)': r2(e.faltas.total), 'Límite (h)': N.limiteFaltas(m), Supera: e.faltas.supera ? 'Sí' : '' });
+        if (fa.injustificadas || fa.justificadas) faltas.push({ 'Módulo': etiqueta(m.codigo), 'Evaluación': ev, Alumno: al(a.clave), 'Sin justificar (h)': fa.injustificadas, 'Justificadas (h)': fa.justificadas, 'Acumulado (h)': r2(e.faltas.total), 'Límite (h)': N.limiteFaltas(m), Supera: e.faltas.supera ? 'Sí' : '' });
       }
       const f = N.notaFinal(m, a.clave, ctx);
-      const fila = { 'Módulo': etiqueta(m.codigo), Alumno: a.clave, ...columnasRA() };
+      const fila = { 'Módulo': etiqueta(m.codigo), Alumno: al(a.clave), ...columnasRA() };
       for (const r of f.ras) fila[r.codigo] = r2(r.def);
       Object.assign(fila, {
         'RA recuperados': f.ras.filter((r) => r.recuperacion !== null).map((r) => `${r.codigo} (${r2(r.original)} → ${r2(r.recuperacion)})`).join(', '),
@@ -144,9 +147,9 @@ export function construirHojas() {
   hojas.push(['Faltas', faltas]);
 
   hojas.push(['Anotaciones', D.porTipo('anotacion').sort(porFecha).map((x) => ({
-    Fecha: fecha(x.fecha), Grupo: grupo(x.grupo)?.nombre || '', Alumno: x.clave || 'Toda la clase', 'Módulo': x.modulo ? etiqueta(x.modulo) : '', Tipo: x.categoria || '', 'Anotación': x.texto || '',
+    Fecha: fecha(x.fecha), Grupo: grupo(x.grupo)?.nombre || '', Alumno: x.clave ? al(x.clave) : 'Toda la clase', 'Módulo': x.modulo ? etiqueta(x.modulo) : '', Tipo: x.categoria || '', 'Anotación': x.texto || '',
   }))]);
-  hojas.push(['Charlas', D.porTipo('charla').sort(porFecha).map((x) => ({ Fecha: fecha(x.fecha), Alumno: x.clave, Motivo: x.motivo || '', Contenido: x.contenido || '', Acuerdos: x.acuerdos || '' }))]);
+  hojas.push(['Charlas', D.porTipo('charla').sort(porFecha).map((x) => ({ Fecha: fecha(x.fecha), Alumno: al(x.clave), Motivo: x.motivo || '', Contenido: x.contenido || '', Acuerdos: x.acuerdos || '' }))]);
   const reuniones = D.porTipo('reunion').sort(porFecha);
   hojas.push(['Reuniones', reuniones.map((x) => ({ Fecha: fecha(x.fecha), Tipo: x.clase || '', Asistentes: x.asistentes || '', Temas: x.temas || '', Acuerdos: x.acuerdos || '' }))]);
   hojas.push(['Tareas', reuniones.flatMap((r) => (r.tareas || []).map((t) => ({ 'Fecha reunión': fecha(r.fecha), 'Reunión': r.clase || '', Tarea: t.texto, 'Fecha límite': fecha(t.limite), Hecha: t.hecha ? 'Sí' : 'No' })))]);
@@ -160,10 +163,10 @@ export function construirHojas() {
   return hojas;
 }
 
-export async function descargarExcel() {
+export async function descargarExcel(opciones = {}) {
   const XLSX = await cargarSheetJS();
   const libro = XLSX.utils.book_new();
-  for (const [nombre, filas] of construirHojas()) {
+  for (const [nombre, filas] of construirHojas(opciones)) {
     const hoja = filas.length ? XLSX.utils.json_to_sheet(filas) : XLSX.utils.aoa_to_sheet([['Sin datos todavía']]);
     // Las fechas (AAAA-MM-DD) pasan a fecha de Excel, para ordenar y filtrar por fecha.
     for (const [ref, celda] of Object.entries(hoja)) {
@@ -179,5 +182,5 @@ export async function descargarExcel() {
     }
     XLSX.utils.book_append_sheet(libro, hoja, nombre.slice(0, 31));
   }
-  XLSX.writeFile(libro, `diaclashom-${hoyISO()}.xlsx`, { compression: true });
+  XLSX.writeFile(libro, `diaclashom-${hoyISO()}${opciones.conNombres ? '-con-nombres' : ''}.xlsx`, { compression: true });
 }

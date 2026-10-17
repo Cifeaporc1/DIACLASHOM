@@ -3,7 +3,7 @@ import * as D from './datos.js';
 import * as N from './notas.js';
 import * as Cierre from './cierre.js';
 import {
-  esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta,
+  esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta, nombre, nombreHTML, nombreCortoHTML,
 } from './util.js';
 
 let marco = null;
@@ -129,7 +129,7 @@ export function vistaPractica(id) {
       const enc = f.rol === 'encargado';
       return `<li class="fila-alumno ${actual === a.clave ? 'seleccionada' : ''} ${f.asiste ? 'ausente' : ''}" data-clave="${esc(a.clave)}">
         <div class="item">
-          <button type="button" class="crece clave sel" data-sel="${esc(a.clave)}">${esc(a.clave)}</button>
+          <button type="button" class="crece clave sel" data-sel="${esc(a.clave)}" title="${esc(nombre(a.clave))}">${nombreCortoHTML(a.clave)}</button>
           <button type="button" class="asiste ${asiste[2]}" data-asiste="${esc(a.clave)}">${asiste[1]}</button>
           <button type="button" class="caja-nota ${actual === a.clave ? 'activa' : ''}" data-sel="${esc(a.clave)}" aria-label="Nota">${esc(textoNota(f))}</button>
           <button type="button" class="estrella ${enc ? 'activo' : ''}" data-enc="${esc(a.clave)}" aria-pressed="${enc}" title="Encargado">${enc ? '★' : '☆'}</button>
@@ -139,7 +139,7 @@ export function vistaPractica(id) {
         ${f.verComentario || f.comentario ? `<input type="text" class="comentario" data-comentario="${esc(a.clave)}" placeholder="Comentario" value="${esc(f.comentario || '')}">` : ''}
       </li>`;
     }).join('');
-    $('#t-actual').textContent = actual ? `${actual}: ${textoNota(p.filas[actual] || {}) || 'sin nota'}` : 'Elige un alumno';
+    $('#t-actual').textContent = actual ? `${nombre(actual)}: ${textoNota(p.filas[actual] || {}) || 'sin nota'}` : 'Elige un alumno';
     enlazar();
   }
 
@@ -283,7 +283,7 @@ export function vistaCalificacion(id) {
         <thead><tr><th>Alumno</th>${c.ces.map((x) => `<th title="${esc(m.ce.find((y) => y.codigo === x)?.texto || '')}">${esc(x)}</th>`).join('')}<th>Comentario</th></tr></thead>
         <tbody>${alumnos.map((a) => {
           const fl = c.filas[a.clave] || {};
-          return `<tr><th scope="row">${esc(a.clave)}</th>${c.ces.map((x) => `<td><input type="text" inputmode="decimal" class="nota" data-clave="${esc(a.clave)}" data-ce="${esc(x)}" value="${esc(fl.notas?.[x] ?? '')}" aria-label="${esc(a.clave)} ${esc(x)}"></td>`).join('')}
+          return `<tr><th scope="row">${nombreHTML(a.clave)}</th>${c.ces.map((x) => `<td><input type="text" inputmode="decimal" class="nota" data-clave="${esc(a.clave)}" data-ce="${esc(x)}" value="${esc(fl.notas?.[x] ?? '')}" aria-label="${esc(a.clave)} ${esc(x)}"></td>`).join('')}
             <td><input type="text" class="com" data-clave="${esc(a.clave)}" value="${esc(fl.comentario || '')}" aria-label="Comentario ${esc(a.clave)}"></td></tr>`;
         }).join('')}</tbody>
       </table></div>`;
@@ -378,7 +378,7 @@ export function vistaLibreta(id) {
       const e = ENTREGA.find((x) => x[0] === fl.entregada) || ENTREGA[0];
       const nota = N.notaLibreta(fl, apartados);
       return `<tr>
-        <th scope="row">${esc(a.clave)}</th>
+        <th scope="row">${nombreHTML(a.clave)}</th>
         <td><button type="button" class="asiste ${fl.entregada === false ? 'falta' : ''}" data-ent="${esc(a.clave)}">${e[1]}</button></td>
         ${apartados.map((_, i) => `<td><input type="text" inputmode="decimal" class="nota" data-clave="${esc(a.clave)}" data-ap="${i}" value="${esc(fl.apartados?.[i] ?? '')}" ${fl.entregada === false ? 'disabled' : ''}></td>`).join('')}
         <td class="calc">${fl.entregada === false ? 'No entregada' : fmt(nota)}</td>
@@ -454,7 +454,7 @@ export function vistaNotas() {
     <div class="tabla-notas resumen"><table>
       <thead><tr><th>Alumno</th><th>Real</th><th>Boletín</th>${m.ra.filter((r) => r.ev === evNotas).map((r) => `<th>${esc(r.codigo)}</th>`).join('')}<th>Ajuste</th></tr></thead>
       <tbody>${filas.map(({ a, e }) => `<tr data-ir="#/nota-alumno/${esc(m.codigo)}/${esc(a.clave)}?ev=${evNotas}">
-        <th scope="row"><a href="#/nota-alumno/${esc(m.codigo)}/${esc(a.clave)}?ev=${evNotas}">${esc(a.clave)}</a></th>
+        <th scope="row"><a href="#/nota-alumno/${esc(m.codigo)}/${esc(a.clave)}?ev=${evNotas}">${nombreHTML(a.clave)}</a></th>
         <td><strong>${fmt(e.real)}</strong></td>
         <td class="${e.perdidaEC || (e.boletin !== null && e.boletin < 5) ? 'bajo' : ''}">${e.boletinTexto}${e.boletin !== null && !e.completa && !e.perdidaEC ? '<small>*</small>' : ''}</td>
         ${e.ras.map((r) => `<td class="${r.valor !== null && r.valor < 5 ? 'bajo' : ''}">${fmt(r.valor, 1)}</td>`).join('')}
@@ -490,7 +490,7 @@ export function vistaNotaAlumno(codigoModulo, clave, q) {
   const marcas = marcasDeModulo(m.codigo, clave);
   let aj = D.porTipo('ajuste').find((x) => x.modulo === m.codigo && Number(x.ev) === ev);
 
-  marco(`${clave} · ${etiqueta(m.codigo)}`, `
+  marco(`${nombre(clave)} · ${etiqueta(m.codigo)}`, `
     <div class="segmento">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((n) => `<a class="${n === ev ? 'activo' : ''}" href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${n}">${evTexto(n)}</a>`).join('')}</div>
     <div class="tarjeta notas-cabecera" id="cabecera-notas">${cabeceraNotas(e)}</div>
     ${e.perdidaEC ? `<p class="mensaje aviso">Ha superado el límite de faltas (${num(e.faltas.total)} h de ${num(e.faltas.limite)} h): pierde la evaluación continua y el boletín es NE.</p>` : ''}
