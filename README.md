@@ -27,7 +27,11 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `js/almacen.js` | Almacén local cifrado (IndexedDB) |
 | `js/nube.js` | Conexión con Supabase |
 | `js/datos.js` | Estado, guardado y sincronización |
-| `js/app.js` | Pantallas |
+| `js/app.js` | Acceso, marco y enrutado |
+| `js/diario.js` | Sesiones, anotaciones, charlas y reuniones |
+| `js/notas.js` | Motor de cálculo de notas (sin pantallas) |
+| `js/calificar.js` | Prácticas, trabajos, pruebas, libreta y notas |
+| `pruebas/notas.test.mjs` | Pruebas del cálculo: `node pruebas/notas.test.mjs` |
 | `datos/programacion-2026-2027.json` | Módulos, RA, CE, pesos, horario y claves, extraídos de las tablas del curso |
 | `supabase/esquema.sql` | Tablas y seguridad por filas |
 | `vendor/` | supabase-js 2.117.2 (licencia MIT) |
@@ -35,7 +39,7 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 ## Fases
 
 1. Base: cifrado, acceso, sincronización, programación y alumnos.
-2. Diario: sesiones, salidas, anotaciones, charlas y reuniones. **(versión 0.2.0)**
-3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta.
+2. Diario: sesiones, salidas, anotaciones, charlas y reuniones.
+3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta. **(versión 0.3.0)**
 4. Cierre y Excel: faltas, recuperaciones, empresa, nota final, exportación.
 5. Nuevo curso.

@@ -1,5 +1,6 @@
 // Fase 2: diario de sesiones, salidas, anotaciones, charlas y reuniones.
 import * as D from './datos.js';
+import * as Calificar from './calificar.js';
 import {
   esc, hoyISO, aFecha, fechaLarga, fechaCorta, minutos, hhmm, horaInput, horaCorta,
   modulo, grupo, grupos, modulos, modulosDeGrupo, alumnosDe, alumno, utsDe, listas,
@@ -141,7 +142,7 @@ export function vistaHoy() {
       <a class="boton secundario" href="#/anotar?volver=hoy">Anotación rápida</a>
     </div>
     <h2>Tareas pendientes${tareas.length ? ` · ${tareas.length}` : ''}</h2>
-    <div class="tarjeta">${pintarTareas(tareas)}</div>
+    <div class="tarjeta">${pintarTareas(tareas)}<a class="boton secundario" href="#/reuniones">Reuniones</a></div>
     <h2>Próximo día de clase · ${esc(fechaLarga(hoyISO(siguiente)))}</h2>
     <div class="tarjeta">${pintarBloques(hoyISO(siguiente), bloquesDelDia(siguiente.getDay()), false)}</div>
     ${recientes.length ? `<h2>Últimas sesiones</h2>${recientes.map(tarjetaSesion).join('')}` : ''}
@@ -204,6 +205,10 @@ export function vistaSesion(id) {
   s.marcas = s.marcas || {};
   s.ces = s.ces || [];
   const anotaciones = D.porTipo('anotacion').filter((a) => a.sesion === s.id).sort((a, b) => (a.creado || '').localeCompare(b.creado || ''));
+  const califSesion = [
+    ...D.porTipo('practica').filter((x) => x.sesion === s.id).map((x) => ({ href: `#/practica/${x.id}`, texto: `Práctica · ${(x.ces || []).map((c) => c.codigo).join(', ') || 'sin CE'}` })),
+    ...D.porTipo('calificacion').filter((x) => x.sesion === s.id).map((x) => ({ href: `#/calificacion/${x.id}`, texto: `${x.titulo || x.instrumento} · ${(x.ces || []).join(', ') || 'sin CE'}` })),
+  ];
 
   marco(`Sesión · ${fechaCorta(s.fecha)}`, `
     <form id="f-sesion" class="formulario" autocomplete="off">
@@ -238,6 +243,13 @@ export function vistaSesion(id) {
     <div class="tarjeta">
       ${anotaciones.length ? `<ul class="lista">${anotaciones.map(filaAnotacion).join('')}</ul>` : '<p class="vacio">Ninguna.</p>'}
       <a class="boton secundario" href="#/anotar?sesion=${esc(s.id)}&volver=sesion/${esc(s.id)}">Añadir anotación</a>
+    </div>
+
+    <h2>Calificar</h2>
+    <div class="tarjeta botones">
+      <button class="boton" type="button" id="b-practica">Notas de práctica (CE PP)</button>
+      <button class="boton secundario" type="button" id="b-calificar">Trabajo, prueba u observación</button>
+      ${califSesion.length ? `<ul class="lista">${califSesion.map((x) => `<li><a href="${esc(x.href)}"><span class="crece">${esc(x.texto)}</span></a></li>`).join('')}</ul>` : ''}
     </div>
 
     <div class="botones" style="margin-top:24px"><button class="boton peligro" type="button" id="b-borrar">Borrar esta sesión</button></div>
@@ -350,8 +362,20 @@ export function vistaSesion(id) {
     guardar();
   });
 
+  $('#b-practica').addEventListener('click', async () => {
+    leer();
+    if (!s.modulos.length) { alert('Elige primero el módulo de la sesión.'); return; }
+    await guardar.ya();
+    await Calificar.abrirPractica(s);
+  });
+  $('#b-calificar').addEventListener('click', async () => {
+    leer();
+    if (!s.modulos.length) { alert('Elige primero el módulo de la sesión.'); return; }
+    await guardar.ya();
+    await Calificar.nuevaCalificacion({ sesion: s.id, instrumento: s.clase === 'prueba' ? 'PE' : 'TP' });
+  });
   $('#b-borrar').addEventListener('click', async () => {
-    if (!confirm('¿Borrar esta sesión con su diario y sus marcas? Las anotaciones se conservan.')) return;
+    if (!confirm('¿Borrar esta sesión con su diario y sus marcas? Las anotaciones y las notas se conservan.')) return;
     guardar.cancelar();
     await D.borrar(s.id);
     ir('#/diario');
@@ -482,6 +506,9 @@ export function vistaAlumno(clave) {
       </dl>
     </div>
 
+    <h2>Notas</h2>
+    ${Calificar.resumenAlumno(clave)}
+
     <h2>En clase</h2>
     <div class="tarjeta">
       <div class="resumen-marcas">${MARCAS.map(([k, t, simbolo]) => `<div class="marca-resumen ${k}"><strong>${simbolo} ${cuenta(k)}</strong><span>${esc(t)}</span></div>`).join('')}</div>
@@ -503,7 +530,6 @@ export function vistaAlumno(clave) {
       <a class="boton secundario" href="#/anotar?clave=${esc(clave)}&volver=alumno/${esc(clave)}">Nueva anotación</a>
     </div>
 
-    <p class="vacio">Sus notas aparecerán aquí en la fase 3.</p>
   `, { volver: '#/alumnos', pestana: 'alumnos' });
 }
 
@@ -524,7 +550,7 @@ export function vistaReuniones() {
         ${r.temas || r.acuerdos ? `<div class="extracto">${esc(primeraLinea(r.acuerdos || r.temas))}</div>` : ''}
       </a>`;
     }).join('') : '<p class="vacio">Todavía no hay reuniones.</p>'}
-  `, { pestana: 'reuniones' });
+  `, { pestana: 'ajustes' });
   $('#b-nueva').addEventListener('click', async () => {
     const [r] = await D.guardar({ tipo: 'reunion', fecha: hoyISO(), clase: 'Departamento', asistentes: '', temas: '', acuerdos: '', tareas: [] });
     ir(`#/reunion/${r.id}`);
@@ -534,7 +560,7 @@ export function vistaReuniones() {
 
 export function vistaReunion(id) {
   const r = D.obtener(id);
-  if (!r || r.tipo !== 'reunion') return marco('Reunión', '<p class="vacio">No encontrada.</p>', { volver: '#/reuniones', pestana: 'reuniones' });
+  if (!r || r.tipo !== 'reunion') return marco('Reunión', '<p class="vacio">No encontrada.</p>', { volver: '#/reuniones', pestana: 'ajustes' });
   r.tareas = r.tareas || [];
   marco(`Reunión · ${fechaCorta(r.fecha)}`, `
     <form id="f-reunion" class="formulario" autocomplete="off">
@@ -557,7 +583,7 @@ export function vistaReunion(id) {
       </form>
     </div>
     <div class="botones" style="margin-top:24px"><button class="boton peligro" type="button" id="b-borrar">Borrar esta reunión</button></div>
-  `, { volver: '#/reuniones', pestana: 'reuniones', editable: true });
+  `, { volver: '#/reuniones', pestana: 'ajustes', editable: true });
 
   const f = $('#f-reunion');
   const aviso = $('#guardado');

@@ -3,6 +3,7 @@ import * as D from './datos.js';
 import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
 import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual } from './util.js';
 import * as Diario from './diario.js';
+import * as Calificar from './calificar.js';
 
 const raiz = document.getElementById('app');
 let pantallaEditable = false;
@@ -113,8 +114,8 @@ function pintarPrimeraVez(modo, mensaje) {
 const PESTANAS = [
   { ruta: 'hoy', texto: 'Hoy', ico: '◷' },
   { ruta: 'diario', texto: 'Diario', ico: '✎' },
+  { ruta: 'notas', texto: 'Notas', ico: '✓' },
   { ruta: 'alumnos', texto: 'Alumnos', ico: '◉' },
-  { ruta: 'reuniones', texto: 'Reuniones', ico: '☰' },
   { ruta: 'ajustes', texto: 'Más', ico: '⋯' },
 ];
 
@@ -220,6 +221,8 @@ async function vistaAjustes() {
   const correo = await D.correoGuardado();
   const curso = D.uno('curso');
   marco('Más', `
+    <h2>Organización</h2>
+    <a class="tarjeta" href="#/reuniones"><div class="titulo">Reuniones y tareas</div><div class="sub">Departamento, claustros, equipos docentes y lo que te toca hacer</div></a>
     <h2>Programación</h2>
     <a class="tarjeta" href="#/modulos"><div class="titulo">Módulos, RA y CE</div><div class="sub">Pesos, instrumentos, unidades de trabajo y límites de faltas</div></a>
     <h2>Sincronización</h2>
@@ -286,6 +289,11 @@ async function pintar() {
       case 'anotacion': return Diario.vistaAnotacion(param, q);
       case 'charla': return Diario.vistaCharla(param === 'nueva' ? null : param, q);
       case 'reuniones': return Diario.vistaReuniones();
+      case 'notas': return Calificar.vistaNotas();
+      case 'practica': return Calificar.vistaPractica(param);
+      case 'calificacion': return param === 'nueva' ? Calificar.nuevaCalificacion(q) : Calificar.vistaCalificacion(param);
+      case 'libreta': return Calificar.vistaLibreta(param);
+      case 'nota-alumno': { const [mod, clave] = location.hash.split('?')[0].split('/').slice(2).map(decodeURIComponent); return Calificar.vistaNotaAlumno(mod, clave, q); }
       case 'reunion': return Diario.vistaReunion(param);
       case 'modulos': return vistaModulos();
       case 'modulo': return vistaModulo(param);
@@ -339,4 +347,5 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 }
 
 Diario.configurar({ marco });
+Calificar.configurar({ marco });
 pintar();
