@@ -69,13 +69,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
   position: sticky;
   top: 0;
   z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 10px;
   background: var(--fondo);
   border-bottom: 1px solid var(--borde);
 }
+.barra-marca { display: flex; align-items: center; gap: 12px; }
+.marca-mini { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; color: var(--acento); text-decoration: none; font-weight: 800; letter-spacing: 0.05em; font-size: 1.05rem; }
+.marca-mini img { width: 40px; height: 40px; border-radius: 50%; background: #fff; object-fit: cover; flex: none; }
+.barra-titulo { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
 
 .cabecera h1 { font-size: 1.15rem; margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cabecera .volver { border: 0; background: none; padding: 4px 8px 4px 0; font-size: 1.4rem; line-height: 1; cursor: pointer; color: var(--acento); }
@@ -247,8 +248,8 @@ details.ra[open] > summary { border-bottom: 1px solid var(--borde); }
 /* ---------- Acceso ---------- */
 
 .acceso { max-width: 420px; margin: 0 auto; padding: calc(40px + env(safe-area-inset-top)) 16px 32px; }
-.acceso .marca { font-size: 1.8rem; font-weight: 700; letter-spacing: 0.04em; color: var(--acento); margin: 0; }
-.acceso .lema { color: var(--texto-suave); margin: 4px 0 28px; }
+.logo-acceso { display: block; width: 220px; height: 220px; margin: 0 auto; border-radius: 24px; background: #fff; }
+.acceso .lema { color: var(--texto-suave); margin: 8px 0 24px; text-align: center; }
 .enlace { background: none; border: 0; color: var(--acento); text-decoration: underline; cursor: pointer; padding: 8px 0; }
 
 .pie { color: var(--texto-suave); font-size: 0.85rem; text-align: center; margin-top: 24px; }

@@ -43,7 +43,7 @@ async function pintarDesbloqueo(mensaje) {
   const correo = await D.correoGuardado();
   raiz.innerHTML = `
     <div class="acceso">
-      <p class="marca">DIACLASHOM</p>
+      <img class="logo-acceso" src="iconos/logo.png" alt="DIACLASHOM" width="240" height="240">
       <p class="lema">Cuaderno del profesor · ${esc(correo)}</p>
       ${mensaje ? `<div class="mensaje ${mensaje.tipo}">${esc(mensaje.texto)}</div>` : ''}
       <form id="f-desbloqueo" autocomplete="on">
@@ -80,7 +80,7 @@ function pintarPrimeraVez(modo, mensaje) {
   const crear = modo === 'crear';
   raiz.innerHTML = `
     <div class="acceso">
-      <p class="marca">DIACLASHOM</p>
+      <img class="logo-acceso" src="iconos/logo.png" alt="DIACLASHOM" width="240" height="240">
       <p class="lema">Cuaderno del profesor</p>
       <div class="segmento" role="tablist">
         <button type="button" data-modo="entrar" class="${crear ? '' : 'activo'}">Ya tengo cuenta</button>
@@ -155,9 +155,14 @@ function marco(titulo, cuerpo, { volver = null, pestana = null } = {}) {
   raiz.innerHTML = `
     <div class="marco">
       <header class="cabecera">
-        ${volver ? `<button class="volver" type="button" aria-label="Volver" data-volver="${esc(volver)}">‹</button>` : ''}
-        <h1>${esc(titulo)}</h1>
-        <button class="estado-sync ${s.clase}" type="button" id="b-sync" title="Sincronizar ahora"><i></i>${esc(s.texto)}</button>
+        <div class="barra-marca">
+          <a href="#/hoy" class="marca-mini"><img src="iconos/logo-mini.png" alt="" width="40" height="40"><span>DIACLASHOM</span></a>
+          <button class="estado-sync ${s.clase}" type="button" id="b-sync" title="Sincronizar ahora"><i></i>${esc(s.texto)}</button>
+        </div>
+        <div class="barra-titulo">
+          ${volver ? `<button class="volver" type="button" aria-label="Volver" data-volver="${esc(volver)}">‹</button>` : ''}
+          <h1>${esc(titulo)}</h1>
+        </div>
       </header>
       <main>${cuerpo}</main>
       <nav class="navegacion" aria-label="Secciones"><div class="dentro">
