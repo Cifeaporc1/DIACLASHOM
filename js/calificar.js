@@ -2,7 +2,7 @@
 import * as D from './datos.js';
 import * as N from './notas.js';
 import {
-  esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto,
+  esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta,
 } from './util.js';
 
 let marco = null;
@@ -34,7 +34,7 @@ function selectorCE({ caja, mods, filtro, elegidos, alCambiar, utInicial = '' })
       const m = modulo(codigo);
       const lista = m.ce.filter((c) => filtro(c) && ((ut && c.ut === ut) || elegidos.some((x) => x.modulo === codigo && x.codigo === c.codigo)));
       if (!lista.length) continue;
-      html += `<div class="ces-modulo">${mods.length > 1 ? `<div class="sub">${esc(codigo)}</div>` : ''}${lista.map((c) => {
+      html += `<div class="ces-modulo">${mods.length > 1 ? `<div class="sub">${esc(etiqueta(codigo))}</div>` : ''}${lista.map((c) => {
         const on = elegidos.some((x) => x.modulo === codigo && x.codigo === c.codigo);
         return `<button type="button" class="ce-chip ${on ? 'activo' : ''}" data-m="${esc(codigo)}" data-c="${esc(c.codigo)}" title="${esc(c.texto)}"><strong>${esc(c.codigo)}</strong> <span>${esc(c.instrumento)} · ${esc(evTexto(c.ev))}</span></button>`;
       }).join('')}</div>`;
@@ -244,7 +244,7 @@ export function vistaCalificacion(id) {
       <label class="campo"><span>Título</span><input type="text" name="titulo" value="${esc(c.titulo)}" placeholder="Ej.: Informe de vacunación, Examen UT2…"></label>
       <div class="rejilla-2">
         <label class="campo"><span>Fecha</span><input type="date" name="fecha" value="${esc(c.fecha)}"></label>
-        <label class="campo"><span>Módulo</span><select name="modulo">${modulos().map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === c.modulo ? 'selected' : ''}>${esc(m.codigo)} · ${esc(grupo(m.grupo)?.nombre || '')}</option>`).join('')}</select></label>
+        <label class="campo"><span>Módulo</span><select name="modulo">${modulos().map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === c.modulo ? 'selected' : ''}>${esc(etiqueta(m.codigo))} · ${esc(grupo(m.grupo)?.nombre || '')}</option>`).join('')}</select></label>
       </div>
       <fieldset class="campo"><legend>Instrumento</legend>
         <div class="opciones">${INSTR_CALIFICACION.map((i) => `<label class="opcion"><input type="radio" name="instrumento" value="${i}" ${c.instrumento === i ? 'checked' : ''}><span>${esc(N.INSTRUMENTOS[i])}</span></label>`).join('')}</div>
@@ -357,7 +357,7 @@ export function vistaLibreta(id) {
   marco(`Libreta · ${g?.nombre || ''} · ${evTexto(l.ev)}`, `
     <div class="tarjeta">
       <label class="campo" style="margin:0"><span>Fecha de recogida</span><input type="date" id="l-fecha" value="${esc(l.fecha)}"></label>
-      <p class="ayuda" style="margin:10px 0 0">Cuenta como un trabajo más en cada CE TP de la ${evTexto(l.ev)} de ${mods.map((m) => esc(m.codigo)).join(' y ')}.
+      <p class="ayuda" style="margin:10px 0 0">Cuenta como un trabajo más en cada CE TP de la ${evTexto(l.ev)} de ${mods.map((m) => esc(etiqueta(m.codigo))).join(' y ')}.
       ${imprescindible ? ' En 1279 es imprescindible: sin libreta, los CE PP de la evaluación valen 0.' : ''}
       Apartados: ${apartados.map((a) => `${esc(nombreCorto(a.nombre))} ${Math.round(a.peso * 100)} %`).join(' · ')}.</p>
     </div>
@@ -440,9 +440,9 @@ export function vistaNotas() {
   ].sort((x, y) => y.fecha.localeCompare(x.fecha));
 
   marco('Notas', `
-    <div class="segmento">${mods.map((x) => `<button type="button" data-mod="${esc(x.codigo)}" class="${x.codigo === m.codigo ? 'activo' : ''}">${esc(x.codigo)}</button>`).join('')}</div>
+    <div class="segmento">${mods.map((x) => `<button type="button" data-mod="${esc(x.codigo)}" class="${x.codigo === m.codigo ? 'activo' : ''}">${esc(etiqueta(x.codigo))}</button>`).join('')}</div>
     <div class="segmento">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((n) => `<button type="button" data-ev="${n}" class="${n === evNotas ? 'activo' : ''}">${evTexto(n)}</button>`).join('')}</div>
-    <p class="ayuda">${esc(m.codigo)} · ${esc(m.nombre)} · ${esc(grupo(m.grupo)?.nombre || '')} · RA de esta evaluación: ${m.ra.filter((r) => r.ev === evNotas).map((r) => esc(r.codigo)).join(', ')}</p>
+    <p class="ayuda">${esc(etiqueta(m.codigo))} · ${esc(m.nombre)} · ${esc(grupo(m.grupo)?.nombre || '')} · RA de esta evaluación: ${m.ra.filter((r) => r.ev === evNotas).map((r) => esc(r.codigo)).join(', ')}</p>
     <div class="botones dos">
       <button class="boton" type="button" id="b-cal">Calificar trabajo, prueba u OD</button>
       <button class="boton secundario" type="button" id="b-lib">Libreta de la ${evTexto(evNotas)}</button>
@@ -486,14 +486,14 @@ export function vistaNotaAlumno(codigoModulo, clave, q) {
   const marcas = marcasDeModulo(m.codigo, clave);
   let aj = D.porTipo('ajuste').find((x) => x.modulo === m.codigo && Number(x.ev) === ev);
 
-  marco(`${clave} · ${m.codigo}`, `
+  marco(`${clave} · ${etiqueta(m.codigo)}`, `
     <div class="segmento">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((n) => `<a class="${n === ev ? 'activo' : ''}" href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${n}">${evTexto(n)}</a>`).join('')}</div>
     <div class="tarjeta notas-cabecera" id="cabecera-notas">${cabeceraNotas(e)}</div>
     ${e.raBajo ? '<p class="mensaje aviso">Tiene algún RA por debajo de 5: el boletín no puede pasar de 4.</p>' : ''}
 
     <h2>Actitud y participación</h2>
     <div class="tarjeta">
-      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(m.codigo)}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Las faltas sin justificar llegarán con la fase 4.</p>
+      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(etiqueta(m.codigo))}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Las faltas sin justificar llegarán con la fase 4.</p>
       <label class="campo" style="margin:0"><span>Ajuste de la ${evTexto(ev)} (de −1 a +1)</span>
         <input type="number" id="ajuste" min="-1" max="1" step="0.1" inputmode="decimal" value="${e.ajuste || ''}" placeholder="0">
       </label>
@@ -535,7 +535,7 @@ export function resumenAlumno(clave) {
   const c = ctx();
   return modulos().filter((m) => m.grupo === a.grupo).map((m) => `
     <div class="tarjeta">
-      <div class="titulo">${esc(m.codigo)} · ${esc(m.nombre)}</div>
+      <div class="titulo">${esc(etiqueta(m.codigo))} · ${esc(m.nombre)}</div>
       <div class="evaluaciones">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((ev) => {
         const e = N.notaEvaluacion(m, ev, clave, c);
         return `<a href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${ev}"><span class="sub">${evTexto(ev)}</span><strong>${fmt(e.real)}</strong><span class="sub">Boletín ${e.boletin ?? '—'}${e.boletin !== null && !e.completa ? '*' : ''}</span></a>`;

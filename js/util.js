@@ -98,3 +98,13 @@ export function diferido(fn, ms = 700) {
   f.cancelar = () => clearTimeout(t);
   return f;
 }
+
+// Siglas de los módulos, junto al código: «1274 OCRC».
+export const SIGLAS = { 1274: 'OCRC', 1276: 'GRC', 1279: 'SG' };
+export function etiqueta(codigo) {
+  const s = modulo(codigo)?.sigla || SIGLAS[codigo];
+  return s ? `${codigo} ${s}` : String(codigo);
+}
+export function etiquetas(codigos, sep = ' + ') {
+  return (codigos || []).map(etiqueta).join(sep);
+}

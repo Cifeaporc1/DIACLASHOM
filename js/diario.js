@@ -4,7 +4,7 @@ import * as Calificar from './calificar.js';
 import {
   esc, hoyISO, aFecha, fechaLarga, fechaCorta, minutos, hhmm, horaInput, horaCorta,
   modulo, grupo, grupos, modulos, modulosDeGrupo, alumnosDe, alumno, utsDe, listas,
-  ir, primeraLinea, diferido,
+  ir, primeraLinea, diferido, etiqueta, etiquetas,
 } from './util.js';
 
 let marco = null;
@@ -116,7 +116,7 @@ function pintarBloques(fecha, bloques, conBotones) {
     return `<div class="franja">
       <div class="hora">${hhmm(b.inicio)}–${hhmm(b.fin)}</div>
       <div class="materia">
-        <strong>${esc(m.codigo)}</strong> ${esc(m.nombre)}
+        <strong>${esc(etiqueta(m.codigo))}</strong> ${esc(m.nombre)}
         <div class="sub">${esc(grupo(m.grupo)?.nombre || '')}${s ? ` · ${esc(nombreTipo(s.clase))}${s.ut ? ' · ' + esc(s.ut) : ''}` : ''}</div>
         ${conBotones ? (s
           ? `<a class="boton pequeno secundario" href="#/sesion/${esc(s.id)}">Abrir sesión</a>`
@@ -171,7 +171,7 @@ function tarjetaSesion(s) {
   const resumenMarcas = MARCAS.map(([k, , simbolo]) => (cuenta(k) ? `${simbolo}${cuenta(k)}` : '')).filter(Boolean).join(' ');
   return `<a class="tarjeta" href="#/sesion/${esc(s.id)}">
     <div class="fila">
-      <span class="titulo crece">${esc(fechaCorta(s.fecha))}${s.inicio ? ` · ${esc(horaCorta(s.inicio))}` : ''} · ${esc((s.modulos || []).join(' + ') || 'Sin módulo')}</span>
+      <span class="titulo crece">${esc(fechaCorta(s.fecha))}${s.inicio ? ` · ${esc(horaCorta(s.inicio))}` : ''} · ${esc(etiquetas(s.modulos) || 'Sin módulo')}</span>
       <span class="chip ${s.clase === 'salida' ? '' : 'neutro'}">${esc(nombreTipo(s.clase))}</span>
     </div>
     <div class="sub">${[s.ut, s.lugar, s.ces?.length ? `${s.ces.length} CE` : '', s.valoracion ? VALORACIONES[s.valoracion] : '', resumenMarcas].filter(Boolean).map(esc).join(' · ')}</div>
@@ -180,7 +180,7 @@ function tarjetaSesion(s) {
 }
 
 export function vistaDiario() {
-  const filtros = [['todas', 'Todas'], ...modulos().map((m) => [m.codigo, m.codigo]), ['salida', 'Salidas']];
+  const filtros = [['todas', 'Todas'], ...modulos().map((m) => [m.codigo, etiqueta(m.codigo)]), ['salida', 'Salidas']];
   const lista = sesiones().filter((s) => filtroDiario === 'todas' || (filtroDiario === 'salida' ? s.clase === 'salida' : s.modulos?.includes(filtroDiario)));
   marco('Diario', `
     <div class="segmento desplazable">${filtros.map(([k, t]) => `<button type="button" data-filtro="${esc(k)}" class="${k === filtroDiario ? 'activo' : ''}">${esc(t)}</button>`).join('')}</div>
@@ -218,7 +218,7 @@ export function vistaSesion(id) {
         <label class="campo"><span>Hasta</span><input type="time" name="fin" value="${esc(horaInput(s.fin))}"></label>
       </div>
       <fieldset class="campo"><legend>Módulo</legend>
-        <div class="opciones">${modulos().map((m) => `<label class="opcion"><input type="checkbox" name="modulos" value="${esc(m.codigo)}" data-grupo="${esc(m.grupo)}" ${s.modulos.includes(m.codigo) ? 'checked' : ''}><span>${esc(m.codigo)} <small>${esc(grupo(m.grupo)?.nombre || '')}</small></span></label>`).join('')}</div>
+        <div class="opciones">${modulos().map((m) => `<label class="opcion"><input type="checkbox" name="modulos" value="${esc(m.codigo)}" data-grupo="${esc(m.grupo)}" ${s.modulos.includes(m.codigo) ? 'checked' : ''}><span>${esc(etiqueta(m.codigo))} <small>${esc(grupo(m.grupo)?.nombre || '')}</small></span></label>`).join('')}</div>
       </fieldset>
       <fieldset class="campo"><legend>Tipo</legend>
         <div class="opciones">${TIPOS_SESION.map(([k, t]) => `<label class="opcion"><input type="radio" name="clase" value="${k}" ${s.clase === k ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}</div>
@@ -278,7 +278,7 @@ export function vistaSesion(id) {
       const m = modulo(codigo);
       const lista = m.ce.filter((c) => (ut ? c.ut === ut : false) || elegido(codigo, c.codigo));
       if (!lista.length) continue;
-      html += `<div class="ces-modulo">${mods.length > 1 ? `<div class="sub">${esc(codigo)}</div>` : ''}${lista.map((c) => `
+      html += `<div class="ces-modulo">${mods.length > 1 ? `<div class="sub">${esc(etiqueta(codigo))}</div>` : ''}${lista.map((c) => `
         <button type="button" class="ce-chip ${elegido(codigo, c.codigo) ? 'activo' : ''}" data-m="${esc(codigo)}" data-c="${esc(c.codigo)}" title="${esc(c.texto)}">
           <strong>${esc(c.codigo)}</strong> <span>${esc(c.instrumento)}</span>
         </button>`).join('')}</div>`;
@@ -394,7 +394,7 @@ export function vistaSesion(id) {
 function filaAnotacion(a) {
   return `<li><a href="#/anotacion/${esc(a.id)}">
     <span class="crece"><strong>${esc(a.clave || 'Toda la clase')}</strong> · ${esc(a.categoria || '')}
-      <span class="sub">${esc(fechaCorta(a.fecha))}${a.modulo ? ' · ' + esc(a.modulo) : ''} · ${esc(primeraLinea(a.texto, 70))}</span>
+      <span class="sub">${esc(fechaCorta(a.fecha))}${a.modulo ? ' · ' + esc(etiqueta(a.modulo)) : ''} · ${esc(primeraLinea(a.texto, 70))}</span>
     </span></a></li>`;
 }
 
@@ -433,7 +433,7 @@ export function vistaAnotacion(id, q) {
   function pintarSelects() {
     const g = $('#a-grupo').value;
     $('#a-clave').innerHTML = `<option value="">Toda la clase</option>${alumnosDe(g).map((x) => `<option ${x.clave === a.clave ? 'selected' : ''}>${esc(x.clave)}</option>`).join('')}`;
-    $('#a-modulo').innerHTML = `<option value="">—</option>${modulosDeGrupo(g).map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === a.modulo ? 'selected' : ''}>${esc(m.codigo)} · ${esc(m.nombre)}</option>`).join('')}`;
+    $('#a-modulo').innerHTML = `<option value="">—</option>${modulosDeGrupo(g).map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === a.modulo ? 'selected' : ''}>${esc(etiqueta(m.codigo))} · ${esc(m.nombre)}</option>`).join('')}`;
   }
   $('#a-grupo').addEventListener('change', pintarSelects);
   pintarSelects();
@@ -502,7 +502,7 @@ export function vistaAlumno(clave) {
       <dl class="datos">
         <dt>Grupo</dt><dd>${esc(grupo(a.grupo)?.nombre || '')}</dd>
         <dt>Número de lista</dt><dd>${a.orden}</dd>
-        <dt>Módulos</dt><dd>${mods.map((m) => esc(m.codigo)).join(' · ')}</dd>
+        <dt>Módulos</dt><dd>${mods.map((m) => esc(etiqueta(m.codigo))).join(' · ')}</dd>
       </dl>
     </div>
 
@@ -514,7 +514,7 @@ export function vistaAlumno(clave) {
       <div class="resumen-marcas">${MARCAS.map(([k, t, simbolo]) => `<div class="marca-resumen ${k}"><strong>${simbolo} ${cuenta(k)}</strong><span>${esc(t)}</span></div>`).join('')}</div>
       ${sesionesConMarca.length ? `<ul class="lista">${sesionesConMarca.slice(0, 15).map((s) => {
         const m = MARCAS.find((x) => x[0] === s.marcas[clave]);
-        return `<li><a href="#/sesion/${esc(s.id)}"><span class="crece">${esc(fechaCorta(s.fecha))} · ${esc((s.modulos || []).join(' + '))}<span class="sub">${esc(nombreTipo(s.clase))}${s.ut ? ' · ' + esc(s.ut) : ''}</span></span><span class="chip marca-chip ${m[0]}">${m[2]} ${esc(m[1])}</span></a></li>`;
+        return `<li><a href="#/sesion/${esc(s.id)}"><span class="crece">${esc(fechaCorta(s.fecha))} · ${esc(etiquetas(s.modulos))}<span class="sub">${esc(nombreTipo(s.clase))}${s.ut ? ' · ' + esc(s.ut) : ''}</span></span><span class="chip marca-chip ${m[0]}">${m[2]} ${esc(m[1])}</span></a></li>`;
       }).join('')}</ul>` : '<p class="vacio">Sin marcas en las sesiones.</p>'}
     </div>
 

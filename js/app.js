@@ -1,7 +1,7 @@
 // Interfaz de DIACLASHOM: acceso, marco, módulos, alumnos, ajustes y enrutado.
 import * as D from './datos.js';
 import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
-import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual } from './util.js';
+import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta } from './util.js';
 import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
 
@@ -158,7 +158,7 @@ function vistaModulos() {
   const mods = D.porTipo('modulo').sort((a, b) => a.grupo.localeCompare(b.grupo) || a.codigo.localeCompare(b.codigo));
   marco('Módulos', mods.map((m) => `
     <a class="tarjeta" href="#/modulo/${esc(m.codigo)}">
-      <div class="fila"><span class="titulo crece">${esc(m.codigo)} · ${esc(m.nombre)}</span><span class="chip">${esc(grupo(m.grupo)?.nombre || '')}</span></div>
+      <div class="fila"><span class="titulo crece">${esc(etiqueta(m.codigo))} · ${esc(m.nombre)}</span><span class="chip">${esc(grupo(m.grupo)?.nombre || '')}</span></div>
       <div class="sub">${m.ra.length} RA · ${m.ce.length} CE · ${m.evaluaciones} evaluaciones · ${num(m.horas)} h</div>
     </a>`).join('') || '<p class="vacio">No hay módulos cargados.</p>', { pestana: 'ajustes' });
 }
@@ -180,7 +180,7 @@ function vistaModulo(codigo) {
       </div>`).join('')}
     </details>`;
   }).join('');
-  marco(`${m.codigo} · ${m.nombre}`, `
+  marco(`${etiqueta(m.codigo)} · ${m.nombre}`, `
     <div class="tarjeta">
       <dl class="datos">
         <dt>Grupo</dt><dd>${esc(grupo(m.grupo)?.nombre || '')}</dd>
