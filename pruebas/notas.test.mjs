@@ -113,9 +113,13 @@ ok('propuesta 0,8·7,6 + 2 = 8,08 → 8', f.propuesta, 8);
 // FC ≤ 3: caso C
 ctx=todoMod(m79,()=>2); ctx.finales=[{modulo:'1279',filas:{[A]:{fe:10}}}];
 f=N.notaFinal(m79,A,ctx); ok('FC 2: caso C', f.caso, 'C'); ok('C: máx 4', f.propuesta, 4);
-// Ajustes de actitud: media de las evaluaciones
+// Ajuste de actitud final: manual; los de las evaluaciones no cuentan solos
 ctx=todoMod(m79,()=>6); ctx.ajustes=[{modulo:'1279',ev:1,filas:{[A]:1}}];
-ok('ajuste medio (1 + 0)/2', N.notaFinal(m79,A,ctx).fcReal, 6.5);
+ok('ajuste de evaluación no entra en la final', N.notaFinal(m79,A,ctx).fcReal, 6);
+ctx.finales=[{modulo:'1279',filas:{[A]:{ajuste:0.3}}}];
+ok('ajuste final manual +0,3', N.notaFinal(m79,A,ctx).fcReal, 6.3);
+ctx.finales[0].filas[A].ajuste=-5;
+ok('ajuste final limitado a −1', N.notaFinal(m79,A,ctx).fcReal, 5);
 // Mención honorífica
 ctx=todoMod(m79,()=>10); ctx.finales=[{modulo:'1279',filas:{[A]:{fe:10}}}];
 ok('todo 10: candidato MH', N.notaFinal(m79,A,ctx).candidatoMH, true);

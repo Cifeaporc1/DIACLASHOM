@@ -131,7 +131,7 @@ export function construirHojas() {
       for (const r of f.ras) fila[r.codigo] = r2(r.def);
       Object.assign(fila, {
         'RA recuperados': f.ras.filter((r) => r.recuperacion !== null).map((r) => `${r.codigo} (${r2(r.original)} → ${r2(r.recuperacion)})`).join(', '),
-        'Ajuste medio': r2(f.ajusteMedio) || '', 'FC real': r2(f.fcReal), 'FC boletín': f.fcBoletin ?? '',
+        'Ajuste actitud final': r2(f.ajusteFinal) || '', 'FC real': r2(f.fcReal), 'FC boletín': f.fcBoletin ?? '',
         Empresa: f.fe === 'exento' ? 'Exento' : f.fe === 'nocursa' ? 'No cursa' : r2(f.fe), Caso: f.casoTexto, Propuesta: f.propuesta ?? '', Consignada: f.consignada ?? '',
         'Candidato MH': f.candidatoMH ? 'Sí' : '', 'Media RA sin redondear': r2(f.mediaRA),
         Observaciones: N.finalDe(m, ctx)?.filas?.[a.clave]?.observaciones || '',

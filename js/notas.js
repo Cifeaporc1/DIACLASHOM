@@ -193,7 +193,7 @@ export function notaEvaluacion(mod, ev, clave, ctx) {
 
 // ---------- Nota final del módulo ----------
 // RA definitivo = recuperación si la hay (sustituye, sin tope) o la nota del RA.
-// FC real = Σ(RA definitivo × peso) + media de los ajustes de actitud de las evaluaciones.
+// FC real = Σ(RA definitivo × peso) + ajuste de actitud final, que pone el profesor a mano (−1 a +1).
 // FC boletín = FC real redondeada, mínimo 1; máximo 4 si algún RA definitivo < 5.
 // Nota final = 0,8 × FC real + 0,2 × FE, redondeada, con los casos del apartado 9.3 (A-F) de las tablas.
 
@@ -225,14 +225,14 @@ export function notaFinal(mod, clave, ctx) {
   const completa = ras.every((r) => r.def !== null);
   const recuperados = ras.filter((r) => r.recuperacion !== null).length;
   const raBajo = ras.some((r) => r.def !== null && r.def < 5);
-  let ajusteMedio = 0;
-  for (let e = 1; e <= mod.evaluaciones; e++) ajusteMedio += ajusteDe(mod, e, clave, ctx);
-  ajusteMedio = mod.evaluaciones ? ajusteMedio / mod.evaluaciones : 0;
+  const ajusteEv = Array.from({ length: mod.evaluaciones }, (_, i) => ajusteDe(mod, i + 1, clave, ctx));
+  const aj = aNumero(fila.ajuste);
+  const ajusteFinal = aj === null ? 0 : Math.max(-1, Math.min(1, aj));
 
   let fcReal = null;
   let fcBoletin = null;
   if (completa) {
-    fcReal = dosDecimales(Math.max(0, Math.min(10, ras.reduce((s, r) => s + r.def * r.peso, 0) + ajusteMedio)));
+    fcReal = dosDecimales(Math.max(0, Math.min(10, ras.reduce((s, r) => s + r.def * r.peso, 0) + ajusteFinal)));
     fcBoletin = Math.max(1, redondear(fcReal));
     if (raBajo) fcBoletin = Math.min(4, fcBoletin);
   }
@@ -259,7 +259,7 @@ export function notaFinal(mod, clave, ctx) {
   const notaParaMH = consignada !== null ? aNumero(consignada) : (typeof propuesta === 'number' ? propuesta : null);
   const mediaRA = completa ? ras.reduce((s, r) => s + r.def, 0) / ras.length : null;
   return {
-    ras, completa, recuperados, raBajo, ajusteMedio, fcReal, fcBoletin, fe, caso, casoTexto: caso ? CASOS[caso] : '',
+    ras, completa, recuperados, raBajo, ajusteFinal, ajusteEv, fcReal, fcBoletin, fe, caso, casoTexto: caso ? CASOS[caso] : '',
     propuesta, consignada, candidatoMH: notaParaMH === 10 && recuperados === 0, mediaRA,
   };
 }

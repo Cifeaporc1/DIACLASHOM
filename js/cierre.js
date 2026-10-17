@@ -90,7 +90,7 @@ export function vistaFinal(codigoModulo) {
   const maxMH = Math.max(1, Math.floor(filas.length * 0.1));
   marco(`Nota final · ${etiqueta(m.codigo)}`, `
     <div class="tarjeta">
-      <p class="ayuda" style="margin:0">FC = Σ(RA definitivo × peso) + media de los ajustes de actitud. Si algún RA definitivo está por debajo de 5, el boletín de la FC no pasa de 4.
+      <p class="ayuda" style="margin:0">FC = Σ(RA definitivo × peso) + el ajuste de actitud final que pones en cada alumno. Si algún RA definitivo está por debajo de 5, el boletín de la FC no pasa de 4.
       Nota final = ${Math.round(m.pesoFC * 100)} % FC real + ${Math.round(m.pesoFE * 100)} % empresa, redondeada, con los casos A-F del apartado 9.3.
       ${m.grupo === 'G1' ? ' En 1.º la FC de junio es informativa (NE + nota): la nota final se pone al terminar la empresa en 2.º.' : ''}</p>
     </div>
@@ -140,6 +140,13 @@ export function vistaFinalAlumno(codigoModulo, clave) {
         <td data-def="${esc(r.codigo)}"></td></tr>`).join('')}</tbody>
     </table></div>
     <p class="ayuda">La recuperación sustituye a la nota del RA, sin tope (de 1 a 10).</p>
+    <h2>Actitud y participación</h2>
+    <div class="tarjeta">
+      <p class="ayuda" style="margin:0 0 8px" id="ajustes-ev"></p>
+      <label class="campo" style="margin:0"><span>Ajuste final (de −1 a +1)</span>
+        <input type="text" inputmode="decimal" id="ajuste-final" value="${esc(actual.ajuste ?? '')}" placeholder="0">
+      </label>
+    </div>
     <h2>Empresa y nota final</h2>
     <div class="tarjeta formulario">
       <div class="rejilla-2">
@@ -178,7 +185,6 @@ export function vistaFinalAlumno(codigoModulo, clave) {
     const avisos = [];
     if (!f.completa) avisos.push('<p class="mensaje aviso">Faltan RA sin nota: la fase de centro todavía no se puede calcular.</p>');
     if (f.raBajo) avisos.push('<p class="mensaje aviso">Hay algún RA definitivo por debajo de 5: la FC no puede pasar de 4.</p>');
-    if (f.ajusteMedio) avisos.push(`<p class="mensaje info">Ajuste de actitud medio del curso: ${f.ajusteMedio > 0 ? '+' : ''}${fmt(f.ajusteMedio)}.</p>`);
     if (f.candidatoMH) avisos.push('<p class="mensaje info">Candidato a mención honorífica.</p>');
     $('#avisos-final').innerHTML = avisos.join('');
     for (const r of f.ras) {
@@ -187,6 +193,8 @@ export function vistaFinalAlumno(codigoModulo, clave) {
       def.textContent = fmt(r.def);
       def.classList.toggle('bajo', r.def !== null && r.def < 5);
     }
+    const fa = N.faltasHasta(m, m.evaluaciones, clave, c);
+    $('#ajustes-ev').innerHTML = `Ajustes que pusiste en las evaluaciones: ${f.ajusteEv.map((v, i) => `${evTexto(i + 1)} ${v > 0 ? '+' : ''}${fmt(v, 1)}`).join(' · ')}. Faltas sin justificar en el curso: ${fmt(fa.injustificadas)} h.`;
     $('#propuesta').innerHTML = f.caso
       ? `<p class="mensaje ${['B', 'D', 'revisar'].includes(f.caso) ? 'aviso' : 'info'}"><strong>${esc(f.casoTexto)}.</strong> Propuesta: <strong>${f.propuesta ?? '—'}</strong>${['B', 'D'].includes(f.caso) ? '. Este caso pide tu decisión.' : ''}</p>`
       : '';
@@ -242,6 +250,16 @@ export function vistaFinalAlumno(codigoModulo, clave) {
     await asegurar();
     fila().consignada = p === 'NE' ? 'NE' : Number(p);
     $('#consignada').value = p;
+    repintar();
+    guardar();
+  });
+  $('#ajuste-final').addEventListener('input', async (ev) => {
+    const v = N.aNumero(ev.target.value);
+    const valido = ev.target.value === '' || (v !== null && v >= -1 && v <= 1);
+    ev.target.classList.toggle('invalido', !valido);
+    if (!valido) return;
+    await asegurar();
+    if (ev.target.value === '') delete fila().ajuste; else fila().ajuste = v;
     repintar();
     guardar();
   });
