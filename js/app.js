@@ -1,35 +1,11 @@
-// Interfaz de DIACLASHOM (fase 1): acceso, inicio, módulos, alumnos y ajustes.
+// Interfaz de DIACLASHOM: acceso, marco, módulos, alumnos, ajustes y enrutado.
 import * as D from './datos.js';
 import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
+import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual } from './util.js';
+import * as Diario from './diario.js';
 
 const raiz = document.getElementById('app');
-const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-const DURACION_FRANJA = 55; // minutos
-
-// ---------- Utilidades ----------
-
-const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const pct = (x) => `${Math.round(x * 1000) / 10}`.replace('.', ',') + ' %';
-const num = (x) => String(Math.round(x * 100) / 100).replace('.', ',');
-const evTexto = (n) => (n ? `${n}.ª ev.` : '');
-
-function minutos(hhmm) {
-  const [h, m] = hhmm.split(':').map(Number);
-  return h * 60 + m;
-}
-function hhmm(min) {
-  return `${Math.floor(min / 60)}:${String(min % 60).padStart(2, '0')}`;
-}
-
-function modulo(codigo) {
-  return D.porTipo('modulo').find((m) => m.codigo === codigo);
-}
-function grupo(codigo) {
-  return D.porTipo('grupo').find((g) => g.codigo === codigo);
-}
-function alumnosDe(codigoGrupo) {
-  return D.porTipo('alumno').filter((a) => a.grupo === codigoGrupo).sort((a, b) => a.orden - b.orden);
-}
+let pantallaEditable = false;
 
 // ---------- Acceso ----------
 
@@ -136,9 +112,10 @@ function pintarPrimeraVez(modo, mensaje) {
 
 const PESTANAS = [
   { ruta: 'hoy', texto: 'Hoy', ico: '◷' },
-  { ruta: 'modulos', texto: 'Módulos', ico: '▤' },
+  { ruta: 'diario', texto: 'Diario', ico: '✎' },
   { ruta: 'alumnos', texto: 'Alumnos', ico: '◉' },
-  { ruta: 'ajustes', texto: 'Ajustes', ico: '⚙' },
+  { ruta: 'reuniones', texto: 'Reuniones', ico: '☰' },
+  { ruta: 'ajustes', texto: 'Más', ico: '⋯' },
 ];
 
 function estadoSync() {
@@ -150,7 +127,8 @@ function estadoSync() {
   return { clase: 'pendiente', texto: 'Pendiente' };
 }
 
-function marco(titulo, cuerpo, { volver = null, pestana = null } = {}) {
+function marco(titulo, cuerpo, { volver = null, pestana = null, editable = false } = {}) {
+  pantallaEditable = editable;
   const s = estadoSync();
   raiz.innerHTML = `
     <div class="marco">
@@ -173,54 +151,6 @@ function marco(titulo, cuerpo, { volver = null, pestana = null } = {}) {
   document.getElementById('b-sync').addEventListener('click', () => D.sincronizar());
 }
 
-// ---------- Hoy ----------
-
-function bloquesDelDia(dia) {
-  const horario = D.uno('horario');
-  if (!horario) return [];
-  const franjas = horario.franjas.filter((f) => f.dia === dia).sort((a, b) => minutos(a.inicio) - minutos(b.inicio));
-  const bloques = [];
-  for (const f of franjas) {
-    const ini = minutos(f.inicio);
-    const ultimo = bloques[bloques.length - 1];
-    if (ultimo && ultimo.clave === (f.modulo || f.texto) && ultimo.fin === ini) {
-      ultimo.fin = ini + DURACION_FRANJA;
-    } else {
-      bloques.push({ clave: f.modulo || f.texto, modulo: f.modulo, texto: f.texto, inicio: ini, fin: ini + DURACION_FRANJA });
-    }
-  }
-  return bloques;
-}
-
-function pintarBloques(bloques) {
-  if (!bloques.length) return '<p class="vacio">Sin clases.</p>';
-  return bloques.map((b) => {
-    const m = b.modulo ? modulo(b.modulo) : null;
-    const g = m ? grupo(m.grupo) : null;
-    return `<div class="franja ${m ? '' : 'otro'}">
-      <div class="hora">${hhmm(b.inicio)}–${hhmm(b.fin)}</div>
-      <div class="materia">${m
-        ? `<a href="#/modulo/${esc(m.codigo)}" style="color:inherit"><strong>${esc(m.codigo)}</strong> ${esc(m.nombre)}</a><div class="sub" style="color:var(--texto-suave);font-size:.9rem">${esc(g?.nombre || '')}</div>`
-        : esc(b.texto.charAt(0) + b.texto.slice(1).toLowerCase())}</div>
-    </div>`;
-  }).join('');
-}
-
-function vistaHoy() {
-  const hoy = new Date();
-  const fecha = hoy.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  let siguiente = new Date(hoy);
-  do { siguiente.setDate(siguiente.getDate() + 1); } while ([0, 6].includes(siguiente.getDay()));
-  const fechaSig = siguiente.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  marco('Hoy', `
-    <h2>${esc(fecha)}</h2>
-    <div class="tarjeta">${pintarBloques(bloquesDelDia(hoy.getDay()))}</div>
-    <h2>Próximo día de clase · ${esc(fechaSig)}</h2>
-    <div class="tarjeta">${pintarBloques(bloquesDelDia(siguiente.getDay()))}</div>
-    <div class="mensaje info">Versión ${esc(VERSION_APP)}: base cifrada, programación y alumnos. Las sesiones, notas y reuniones llegan en las siguientes fases.</div>
-  `, { pestana: 'hoy' });
-}
-
 // ---------- Módulos ----------
 
 function vistaModulos() {
@@ -229,12 +159,12 @@ function vistaModulos() {
     <a class="tarjeta" href="#/modulo/${esc(m.codigo)}">
       <div class="fila"><span class="titulo crece">${esc(m.codigo)} · ${esc(m.nombre)}</span><span class="chip">${esc(grupo(m.grupo)?.nombre || '')}</span></div>
       <div class="sub">${m.ra.length} RA · ${m.ce.length} CE · ${m.evaluaciones} evaluaciones · ${num(m.horas)} h</div>
-    </a>`).join('') || '<p class="vacio">No hay módulos cargados.</p>', { pestana: 'modulos' });
+    </a>`).join('') || '<p class="vacio">No hay módulos cargados.</p>', { pestana: 'ajustes' });
 }
 
 function vistaModulo(codigo) {
   const m = modulo(codigo);
-  if (!m) return marco('Módulo', '<p class="vacio">No encontrado.</p>', { volver: '#/modulos', pestana: 'modulos' });
+  if (!m) return marco('Módulo', '<p class="vacio">No encontrado.</p>', { volver: '#/modulos', pestana: 'ajustes' });
   const cuenta = (i) => m.ce.filter((c) => c.instrumento === i).length;
   const ras = m.ra.map((ra) => {
     const ces = m.ce.filter((c) => c.ra === ra.codigo);
@@ -263,7 +193,7 @@ function vistaModulo(codigo) {
     </div>
     <h2>Resultados de aprendizaje</h2>
     ${ras}
-  `, { volver: '#/modulos', pestana: 'modulos' });
+  `, { volver: '#/modulos', pestana: 'ajustes' });
 }
 
 // ---------- Alumnos ----------
@@ -282,24 +212,6 @@ function vistaAlumnos() {
   raiz.querySelectorAll('[data-grupo]').forEach((b) => b.addEventListener('click', () => { grupoElegido = b.dataset.grupo; vistaAlumnos(); }));
 }
 
-function vistaAlumno(clave) {
-  const a = D.porTipo('alumno').find((x) => x.clave === clave);
-  if (!a) return marco('Alumno', '<p class="vacio">No encontrado.</p>', { volver: '#/alumnos', pestana: 'alumnos' });
-  const mods = D.porTipo('modulo').filter((m) => m.grupo === a.grupo);
-  marco(a.clave, `
-    <div class="tarjeta">
-      <dl class="datos">
-        <dt>Grupo</dt><dd>${esc(grupo(a.grupo)?.nombre || '')}</dd>
-        <dt>Número de lista</dt><dd>${a.orden}</dd>
-        <dt>Estado</dt><dd>${a.activo ? 'Activo' : 'Baja'}</dd>
-      </dl>
-    </div>
-    <h2>Módulos</h2>
-    <ul class="lista tarjeta">${mods.map((m) => `<li><a href="#/modulo/${esc(m.codigo)}">${esc(m.codigo)} · ${esc(m.nombre)}</a></li>`).join('')}</ul>
-    <p class="vacio">Sus notas, anotaciones y charlas aparecerán aquí en las siguientes fases.</p>
-  `, { volver: '#/alumnos', pestana: 'alumnos' });
-}
-
 // ---------- Ajustes ----------
 
 async function vistaAjustes() {
@@ -307,7 +219,9 @@ async function vistaAjustes() {
   const pend = await D.pendientes();
   const correo = await D.correoGuardado();
   const curso = D.uno('curso');
-  marco('Ajustes', `
+  marco('Más', `
+    <h2>Programación</h2>
+    <a class="tarjeta" href="#/modulos"><div class="titulo">Módulos, RA y CE</div><div class="sub">Pesos, instrumentos, unidades de trabajo y límites de faltas</div></a>
     <h2>Sincronización</h2>
     <div class="tarjeta">
       ${s.aviso ? `<div class="mensaje aviso">${esc(s.aviso)}</div>` : ''}
@@ -364,15 +278,21 @@ async function pintar() {
   pintando = true;
   try {
     if (!D.desbloqueado()) return await pintarAcceso();
-    const [, ruta, param] = (location.hash || '#/hoy').split('/');
-    const p = param ? decodeURIComponent(param) : '';
+    const { ruta, param, q } = rutaActual();
     switch (ruta) {
+      case 'diario': return Diario.vistaDiario();
+      case 'sesion': return Diario.vistaSesion(param);
+      case 'anotar': return Diario.vistaAnotacion(null, q);
+      case 'anotacion': return Diario.vistaAnotacion(param, q);
+      case 'charla': return Diario.vistaCharla(param === 'nueva' ? null : param, q);
+      case 'reuniones': return Diario.vistaReuniones();
+      case 'reunion': return Diario.vistaReunion(param);
       case 'modulos': return vistaModulos();
-      case 'modulo': return vistaModulo(p);
+      case 'modulo': return vistaModulo(param);
       case 'alumnos': return vistaAlumnos();
-      case 'alumno': return vistaAlumno(p);
+      case 'alumno': return Diario.vistaAlumno(param);
       case 'ajustes': return await vistaAjustes();
-      default: return vistaHoy();
+      default: return Diario.vistaHoy();
     }
   } finally {
     pintando = false;
@@ -389,6 +309,7 @@ D.onCambio(() => {
   clearTimeout(repintado);
   repintado = setTimeout(() => {
     if (!D.desbloqueado()) return pintar();
+    if (pantallaEditable) return; // en formularios no se repinta: se perdería lo escrito
     const activo = document.activeElement;
     if (activo && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activo.tagName)) return;
     const y = window.scrollY;
@@ -417,4 +338,5 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+Diario.configurar({ marco });
 pintar();

@@ -34,8 +34,8 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 
 ## Fases
 
-1. Base: cifrado, acceso, sincronización, programación y alumnos. **(esta versión, 0.1.0)**
-2. Diario: sesiones, salidas, anotaciones, charlas y reuniones.
+1. Base: cifrado, acceso, sincronización, programación y alumnos.
+2. Diario: sesiones, salidas, anotaciones, charlas y reuniones. **(versión 0.2.0)**
 3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta.
 4. Cierre y Excel: faltas, recuperaciones, empresa, nota final, exportación.
 5. Nuevo curso.

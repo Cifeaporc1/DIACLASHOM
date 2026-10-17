@@ -254,3 +254,113 @@ details.ra[open] > summary { border-bottom: 1px solid var(--borde); }
 
 .pie { color: var(--texto-suave); font-size: 0.85rem; text-align: center; margin-top: 24px; }
 .vacio { color: var(--texto-suave); padding: 8px 0; }
+
+/* ---------- Fase 2: diario, sesiones y reuniones ---------- */
+
+:root { --destaca: #2f7a3e; --destaca-fondo: #e1f0e3; --mal: #a3271f; --mal-fondo: #f9e3e1; --ausente: #5d665f; --ausente-fondo: #e7e5de; }
+@media (prefers-color-scheme: dark) {
+  :root { --destaca: #8fd19c; --destaca-fondo: #1f3a26; --mal: #f2938b; --mal-fondo: #3d2422; --ausente: #c3cbc5; --ausente-fondo: #2c332e; }
+}
+
+.sub { color: var(--texto-suave); font-size: 0.9rem; display: block; }
+.extracto { margin-top: 6px; font-size: 0.95rem; }
+.ayuda { color: var(--texto-suave); font-size: 0.9rem; margin: -4px 0 10px; }
+.chip.alerta { background: var(--error-fondo); color: var(--error); }
+
+.boton.pequeno { width: auto; padding: 7px 14px; font-size: 0.9rem; margin-top: 8px; text-decoration: none; }
+a.boton { text-decoration: none; }
+.botones.dos { grid-template-columns: 1fr 1fr; margin: 12px 0 4px; }
+.tarjeta > .boton { margin-top: 12px; }
+
+.segmento.desplazable { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+.segmento.desplazable button { flex: none; }
+
+.navegacion a { font-size: 0.78rem; }
+
+/* Formularios */
+.formulario .campo input, .formulario .campo select, .formulario .campo textarea,
+.campo select, .campo textarea, .campo input[type="date"], .campo input[type="time"] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie);
+}
+.campo textarea { resize: vertical; min-height: 64px; line-height: 1.4; }
+.campo select:focus, .campo textarea:focus { outline: 2px solid var(--acento); outline-offset: 1px; }
+fieldset.campo { border: 0; padding: 0; margin: 0 0 14px; min-width: 0; }
+fieldset.campo legend, .campo > span { display: block; font-size: 0.9rem; color: var(--texto-suave); margin-bottom: 6px; padding: 0; }
+.rejilla-3 { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; }
+.rejilla-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opciones { display: flex; flex-wrap: wrap; gap: 6px; }
+.opcion { position: relative; }
+.opcion input { position: absolute; opacity: 0; pointer-events: none; }
+.opcion span {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--superficie);
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+.opcion small { color: var(--texto-suave); }
+.opcion input:checked + span { background: var(--acento); border-color: var(--acento); color: var(--texto-acento); font-weight: 600; }
+.opcion input:checked + span small { color: inherit; }
+.opcion input:focus-visible + span { outline: 2px solid var(--acento); outline-offset: 2px; }
+.estado-guardado { color: var(--texto-suave); font-size: 0.85rem; margin: 0; text-align: right; }
+
+/* CE de la sesión */
+.ces-elegir { display: grid; gap: 8px; }
+.ces-modulo { display: flex; flex-wrap: wrap; gap: 6px; }
+.ces-modulo .sub { width: 100%; }
+.ce-chip {
+  border: 1px solid var(--borde);
+  background: var(--superficie);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.ce-chip span { color: var(--texto-suave); font-size: 0.8rem; }
+.ce-chip.activo { background: var(--acento-suave); border-color: var(--acento); }
+
+/* Marcas de alumnos */
+.lista.marcas .item { padding: 8px 0; gap: 6px; }
+.lista.marcas .clave { color: inherit; text-decoration: none; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.marca {
+  border: 1px solid var(--borde);
+  background: var(--superficie);
+  color: var(--texto-suave);
+  border-radius: 8px;
+  min-width: 40px;
+  height: 36px;
+  padding: 0 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.marca .txt { display: none; }
+@media (min-width: 560px) { .marca .txt { display: inline; font-weight: 500; margin-left: 4px; font-size: 0.85rem; } }
+.marca.destaca.activo { background: var(--destaca-fondo); border-color: var(--destaca); color: var(--destaca); }
+.marca.mal.activo { background: var(--mal-fondo); border-color: var(--mal); color: var(--mal); }
+.marca.ausente.activo { background: var(--ausente-fondo); border-color: var(--ausente); color: var(--ausente); }
+.resumen-marcas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+.marca-resumen { border-radius: 10px; padding: 8px; text-align: center; }
+.marca-resumen strong { display: block; font-size: 1.1rem; }
+.marca-resumen span { font-size: 0.8rem; }
+.marca-resumen.destaca, .marca-chip.destaca { background: var(--destaca-fondo); color: var(--destaca); }
+.marca-resumen.mal, .marca-chip.mal { background: var(--mal-fondo); color: var(--mal); }
+.marca-resumen.ausente, .marca-chip.ausente { background: var(--ausente-fondo); color: var(--ausente); }
+
+/* Tareas */
+.item.tarea { align-items: flex-start; }
+.item.tarea input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+.hecha { text-decoration: line-through; color: var(--texto-suave); }
+.quitar { border: 0; background: none; color: var(--texto-suave); font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+.nueva-tarea { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 12px; }
+.nueva-tarea input { padding: 10px; border: 1px solid var(--borde); border-radius: 10px; background: var(--superficie); min-width: 0; }
+.nueva-tarea input[type="text"] { grid-column: 1 / -1; }
+.nueva-tarea .boton { margin-top: 0; }
+.lista li.vacio { border: 0; padding: 8px 0; }
+
+[hidden] { display: none !important; }
