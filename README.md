@@ -34,12 +34,14 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `pruebas/notas.test.mjs` | Pruebas del cálculo: `node pruebas/notas.test.mjs` |
 | `datos/programacion-2026-2027.json` | Módulos, RA, CE, pesos, horario y claves, extraídos de las tablas del curso |
 | `supabase/esquema.sql` | Tablas y seguridad por filas |
-| `vendor/` | supabase-js 2.117.2 (licencia MIT) |
+| `js/cierre.js` | Faltas, recuperaciones, empresa y nota final |
+| `js/exportar.js` | Exportación a Excel |
+| `vendor/` | supabase-js 2.117.2 (MIT) y SheetJS 0.18.5 (Apache 2.0) |
 
 ## Fases
 
 1. Base: cifrado, acceso, sincronización, programación y alumnos.
 2. Diario: sesiones, salidas, anotaciones, charlas y reuniones.
-3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta. **(versión 0.3.0)**
-4. Cierre y Excel: faltas, recuperaciones, empresa, nota final, exportación.
+3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta.
+4. Cierre y Excel: faltas, recuperaciones, empresa, nota final, exportación. **(versión 0.4.0)**
 5. Nuevo curso.

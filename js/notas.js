@@ -140,6 +140,33 @@ export function ajusteDe(mod, ev, clave, ctx) {
   return v === null ? 0 : Math.max(-1, Math.min(1, v));
 }
 
+// ---------- Faltas ----------
+// Se meten por evaluación (horas justificadas y sin justificar). La evaluación continua se pierde
+// al pasar del 30 % de las horas del módulo, contando justificadas y no justificadas (apartado 13).
+
+export function limiteFaltas(mod) {
+  return Math.round(mod.horas * mod.pctFaltas * 100) / 100;
+}
+
+export function faltasDe(mod, ev, clave, ctx) {
+  const r = (ctx.faltas || []).find((x) => x.modulo === mod.codigo && Number(x.ev) === Number(ev));
+  const f = r?.filas?.[clave] || {};
+  return { injustificadas: aNumero(f.injustificadas) || 0, justificadas: aNumero(f.justificadas) || 0 };
+}
+
+export function faltasHasta(mod, ev, clave, ctx) {
+  let inj = 0;
+  let just = 0;
+  for (let e = 1; e <= ev; e++) {
+    const f = faltasDe(mod, e, clave, ctx);
+    inj += f.injustificadas;
+    just += f.justificadas;
+  }
+  const total = inj + just;
+  const limite = limiteFaltas(mod);
+  return { injustificadas: inj, justificadas: just, total, limite, pct: mod.horas ? total / mod.horas : 0, supera: total > limite };
+}
+
 export function notaEvaluacion(mod, ev, clave, ctx) {
   const ras = mod.ra.filter((r) => Number(r.ev) === Number(ev)).map((r) => notaRA(mod, r, clave, ctx));
   const con = ras.filter((r) => r.valor !== null);
@@ -156,7 +183,85 @@ export function notaEvaluacion(mod, ev, clave, ctx) {
     if (raBajo) b = Math.min(4, b);
     boletin = b;
   }
-  return { ev: Number(ev), ras, base, ajuste, real, boletin, completa, faltanCE, raBajo };
+  const faltas = faltasHasta(mod, ev, clave, ctx);
+  const perdidaEC = faltas.supera;
+  return {
+    ev: Number(ev), ras, base, ajuste, real, boletin, completa, faltanCE, raBajo, faltas, perdidaEC,
+    boletinTexto: perdidaEC ? 'NE' : (boletin === null ? '—' : String(boletin)),
+  };
+}
+
+// ---------- Nota final del módulo ----------
+// RA definitivo = recuperación si la hay (sustituye, sin tope) o la nota del RA.
+// FC real = Σ(RA definitivo × peso) + media de los ajustes de actitud de las evaluaciones.
+// FC boletín = FC real redondeada, mínimo 1; máximo 4 si algún RA definitivo < 5.
+// Nota final = 0,8 × FC real + 0,2 × FE, redondeada, con los casos del apartado 9.3 (A-F) de las tablas.
+
+export const CASOS = {
+  general: 'General',
+  A: 'A · FE = 4',
+  B: 'B · FE < 4: consultar al tutor',
+  C: 'C · FC ≤ 3: recupera centro',
+  D: 'D · FC = 4: comprobar RA',
+  E: 'E · Exento de FE',
+  F: 'F · No cursa la FE',
+  revisar: 'Revisar: exento con FC < 5',
+  faltaFE: 'Falta la nota de empresa',
+};
+
+export function finalDe(mod, ctx) {
+  return (ctx.finales || []).find((x) => x.modulo === mod.codigo);
+}
+
+export function notaFinal(mod, clave, ctx) {
+  const reg = finalDe(mod, ctx);
+  const fila = reg?.filas?.[clave] || {};
+  const rec = fila.rec || {};
+  const ras = mod.ra.map((r) => {
+    const original = notaRA(mod, r, clave, ctx).valor;
+    const recuperacion = aNumero(rec[r.codigo]);
+    return { codigo: r.codigo, peso: r.peso, ev: r.ev, original, recuperacion, def: recuperacion !== null ? recuperacion : original };
+  });
+  const completa = ras.every((r) => r.def !== null);
+  const recuperados = ras.filter((r) => r.recuperacion !== null).length;
+  const raBajo = ras.some((r) => r.def !== null && r.def < 5);
+  let ajusteMedio = 0;
+  for (let e = 1; e <= mod.evaluaciones; e++) ajusteMedio += ajusteDe(mod, e, clave, ctx);
+  ajusteMedio = mod.evaluaciones ? ajusteMedio / mod.evaluaciones : 0;
+
+  let fcReal = null;
+  let fcBoletin = null;
+  if (completa) {
+    fcReal = dosDecimales(Math.max(0, Math.min(10, ras.reduce((s, r) => s + r.def * r.peso, 0) + ajusteMedio)));
+    fcBoletin = Math.max(1, redondear(fcReal));
+    if (raBajo) fcBoletin = Math.min(4, fcBoletin);
+  }
+
+  const feTexto = fila.fe ?? '';
+  const fe = feTexto === 'exento' || feTexto === 'nocursa' ? feTexto : aNumero(feTexto);
+  let caso = null;
+  let propuesta = null;
+  if (fcBoletin !== null) {
+    const mezcla = (tope) => {
+      const v = redondear(mod.pesoFC * fcReal + mod.pesoFE * fe);
+      return Math.max(1, tope ? Math.min(tope, v) : v);
+    };
+    if (fe === 'nocursa') { caso = 'F'; propuesta = 'NE'; }
+    else if (fe === 'exento') { if (fcBoletin >= 5) { caso = 'E'; propuesta = fcBoletin; } else caso = 'revisar'; }
+    else if (fe === null) caso = 'faltaFE';
+    else if (fcBoletin <= 3) { caso = 'C'; propuesta = mezcla(4); }
+    else if (fcBoletin === 4) { caso = 'D'; propuesta = mezcla(5); }
+    else if (fe >= 5) { caso = 'general'; propuesta = mezcla(); }
+    else if (fe === 4) { caso = 'A'; propuesta = mezcla(); }
+    else { caso = 'B'; propuesta = mezcla(); }
+  }
+  const consignada = fila.consignada === undefined || fila.consignada === '' ? null : fila.consignada;
+  const notaParaMH = consignada !== null ? aNumero(consignada) : (typeof propuesta === 'number' ? propuesta : null);
+  const mediaRA = completa ? ras.reduce((s, r) => s + r.def, 0) / ras.length : null;
+  return {
+    ras, completa, recuperados, raBajo, ajusteMedio, fcReal, fcBoletin, fe, caso, casoTexto: caso ? CASOS[caso] : '',
+    propuesta, consignada, candidatoMH: notaParaMH === 10 && recuperados === 0, mediaRA,
+  };
 }
 
 // Contexto a partir de los registros guardados.
@@ -166,6 +271,8 @@ export function contexto(porTipo, listas) {
     calificaciones: porTipo('calificacion'),
     libretas: porTipo('libreta'),
     ajustes: porTipo('ajuste'),
+    faltas: porTipo('faltas'),
+    finales: porTipo('final'),
     apartadosLibreta: listas?.libretaApartados || [
       { peso: 0.25 }, { peso: 0.25 }, { peso: 0.25 }, { peso: 0.25 },
     ],

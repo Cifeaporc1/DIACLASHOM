@@ -1,6 +1,7 @@
 // Fase 3: calificar. Prácticas diarias, trabajos, pruebas, observación directa, examen práctico, libreta y notas.
 import * as D from './datos.js';
 import * as N from './notas.js';
+import * as Cierre from './cierre.js';
 import {
   esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta,
 } from './util.js';
@@ -446,6 +447,8 @@ export function vistaNotas() {
     <div class="botones dos">
       <button class="boton" type="button" id="b-cal">Calificar trabajo, prueba u OD</button>
       <button class="boton secundario" type="button" id="b-lib">Libreta de la ${evTexto(evNotas)}</button>
+      <button class="boton secundario" type="button" id="b-faltas">Faltas de la ${evTexto(evNotas)}</button>
+      <a class="boton secundario" href="#/final/${esc(m.codigo)}">Nota final y recuperaciones</a>
     </div>
     <h2>Alumnos</h2>
     <div class="tabla-notas resumen"><table>
@@ -453,12 +456,12 @@ export function vistaNotas() {
       <tbody>${filas.map(({ a, e }) => `<tr data-ir="#/nota-alumno/${esc(m.codigo)}/${esc(a.clave)}?ev=${evNotas}">
         <th scope="row"><a href="#/nota-alumno/${esc(m.codigo)}/${esc(a.clave)}?ev=${evNotas}">${esc(a.clave)}</a></th>
         <td><strong>${fmt(e.real)}</strong></td>
-        <td class="${e.boletin !== null && e.boletin < 5 ? 'bajo' : ''}">${e.boletin ?? '—'}${e.boletin !== null && !e.completa ? '<small>*</small>' : ''}</td>
+        <td class="${e.perdidaEC || (e.boletin !== null && e.boletin < 5) ? 'bajo' : ''}">${e.boletinTexto}${e.boletin !== null && !e.completa && !e.perdidaEC ? '<small>*</small>' : ''}</td>
         ${e.ras.map((r) => `<td class="${r.valor !== null && r.valor < 5 ? 'bajo' : ''}">${fmt(r.valor, 1)}</td>`).join('')}
         <td>${e.ajuste ? (e.ajuste > 0 ? '+' : '') + fmt(e.ajuste, 1) : ''}</td>
       </tr>`).join('')}</tbody>
     </table></div>
-    <p class="ayuda">* Provisional: faltan CE por calificar. Toca un alumno para ver el detalle y poner el ajuste de actitud.</p>
+    <p class="ayuda">* Provisional: faltan CE por calificar. NE: ha superado el límite de faltas (${num(N.limiteFaltas(m))} h). Toca un alumno para ver el detalle y poner el ajuste de actitud.</p>
     <h2>Calificaciones de esta evaluación</h2>
     <div class="tarjeta">${evaluables.length ? `<ul class="lista">${evaluables.map((x) => `<li><a href="${esc(x.href)}"><span class="crece">${esc(fechaCorta(x.fecha))} · ${esc(x.titulo)}<span class="sub">${esc(x.sub)}</span></span></a></li>`).join('')}</ul>` : '<p class="vacio">Todavía ninguna. Las prácticas se califican desde cada sesión.</p>'}</div>
   `, { pestana: 'notas' });
@@ -466,6 +469,7 @@ export function vistaNotas() {
   $$('[data-ev]').forEach((b) => b.addEventListener('click', () => { evNotas = Number(b.dataset.ev); vistaNotas(); }));
   $('#b-cal').addEventListener('click', () => nuevaCalificacion({ modulo: m.codigo }));
   $('#b-lib').addEventListener('click', () => abrirLibreta(m.grupo, evNotas));
+  $('#b-faltas').addEventListener('click', () => Cierre.abrirFaltas(m.codigo, evNotas));
   $$('tr[data-ir]').forEach((tr) => tr.addEventListener('click', (ev) => { if (ev.target.tagName !== 'A') ir(tr.dataset.ir); }));
 }
 
@@ -473,7 +477,7 @@ export function vistaNotas() {
 
 function cabeceraNotas(e) {
   return `<div><span class="sub">Nota real</span><strong class="grande">${fmt(e.real)}</strong></div>
-      <div><span class="sub">Boletín</span><strong class="grande ${e.boletin !== null && e.boletin < 5 ? 'bajo' : ''}">${e.boletin ?? '—'}</strong></div>
+      <div><span class="sub">Boletín</span><strong class="grande ${e.perdidaEC || (e.boletin !== null && e.boletin < 5) ? 'bajo' : ''}">${e.boletinTexto}</strong></div>
       <div><span class="sub">Estado</span><strong>${e.completa ? (e.faltanCE ? `Faltan ${e.faltanCE} CE` : 'Completa') : 'Provisional'}</strong></div>`;
 }
 
@@ -489,11 +493,12 @@ export function vistaNotaAlumno(codigoModulo, clave, q) {
   marco(`${clave} · ${etiqueta(m.codigo)}`, `
     <div class="segmento">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((n) => `<a class="${n === ev ? 'activo' : ''}" href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${n}">${evTexto(n)}</a>`).join('')}</div>
     <div class="tarjeta notas-cabecera" id="cabecera-notas">${cabeceraNotas(e)}</div>
+    ${e.perdidaEC ? `<p class="mensaje aviso">Ha superado el límite de faltas (${num(e.faltas.total)} h de ${num(e.faltas.limite)} h): pierde la evaluación continua y el boletín es NE.</p>` : ''}
     ${e.raBajo ? '<p class="mensaje aviso">Tiene algún RA por debajo de 5: el boletín no puede pasar de 4.</p>' : ''}
 
     <h2>Actitud y participación</h2>
     <div class="tarjeta">
-      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(etiqueta(m.codigo))}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Las faltas sin justificar llegarán con la fase 4.</p>
+      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(etiqueta(m.codigo))}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Faltas sin justificar: <strong>${num(N.faltasDe(m, ev, clave, ctx()).injustificadas)} h</strong> en esta evaluación (${num(e.faltas.injustificadas)} h en el curso).</p>
       <label class="campo" style="margin:0"><span>Ajuste de la ${evTexto(ev)} (de −1 a +1)</span>
         <input type="number" id="ajuste" min="-1" max="1" step="0.1" inputmode="decimal" value="${e.ajuste || ''}" placeholder="0">
       </label>
@@ -538,7 +543,7 @@ export function resumenAlumno(clave) {
       <div class="titulo">${esc(etiqueta(m.codigo))} · ${esc(m.nombre)}</div>
       <div class="evaluaciones">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((ev) => {
         const e = N.notaEvaluacion(m, ev, clave, c);
-        return `<a href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${ev}"><span class="sub">${evTexto(ev)}</span><strong>${fmt(e.real)}</strong><span class="sub">Boletín ${e.boletin ?? '—'}${e.boletin !== null && !e.completa ? '*' : ''}</span></a>`;
+        return `<a href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${ev}"><span class="sub">${evTexto(ev)}</span><strong>${fmt(e.real)}</strong><span class="sub">Boletín ${e.boletinTexto}${e.boletin !== null && !e.completa && !e.perdidaEC ? '*' : ''}</span></a>`;
       }).join('')}</div>
     </div>`).join('');
 }

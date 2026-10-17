@@ -79,4 +79,50 @@ const pc=prac('x',[{modulo:'1274',codigo:'1.b'},{modulo:'1276',codigo:'1.c'}],{r
 ctx={apartadosLibreta, practicas:[pc, prac('y',[{modulo:'1274',codigo:'1.b'}],{valor:5})]};
 ok('práctica común cuenta en 1274', N.notaCE(m74,ce(m74,'1.b'),A,ctx).valor, 7);
 ok('práctica común cuenta en 1276', N.notaCE(m76,ce(m76,'1.c'),A,ctx).valor, 8);
+
+// ---------- Fase 4: faltas y nota final ----------
+const todoMod=(m,valor)=>{ const c={apartadosLibreta, practicas:[], calificaciones:[], libretas:[], ajustes:[], faltas:[], finales:[]};
+  for(let ev=1; ev<=m.evaluaciones; ev++){ const t=todo(m,ev,valor); c.practicas.push(...t.practicas); c.calificaciones.push(...t.calificaciones); } return c; };
+ok('límite de faltas 1279', N.limiteFaltas(m79), 40.95);
+ok('límite de faltas 1274', N.limiteFaltas(m74), 67.2);
+ctx=todoMod(m79,()=>6);
+ctx.faltas=[{modulo:'1279',ev:1,filas:{[A]:{injustificadas:20,justificadas:10}}},{modulo:'1279',ev:2,filas:{[A]:{injustificadas:5,justificadas:5.95}}}];
+ok('40,95 h: no supera', N.faltasHasta(m79,2,A,ctx).supera, false);
+ctx.faltas[1].filas[A].justificadas=6;
+ok('41 h: supera (cuentan también las justificadas)', N.faltasHasta(m79,2,A,ctx).supera, true);
+ok('ev1 sin pérdida', N.notaEvaluacion(m79,1,A,ctx).boletinTexto, '6');
+ok('ev2 con pérdida: NE', N.notaEvaluacion(m79,2,A,ctx).boletinTexto, 'NE');
+ok('sin justificar acumuladas', N.faltasHasta(m79,2,A,ctx).injustificadas, 25);
+// Nota final
+ctx=todoMod(m79,()=>6);
+let f=N.notaFinal(m79,A,ctx);
+ok('FC real todo 6', f.fcReal, 6); ok('FC boletín', f.fcBoletin, 6); ok('sin FE: caso', f.caso, 'faltaFE');
+ctx.finales=[{modulo:'1279',filas:{[A]:{fe:8}}}];
+f=N.notaFinal(m79,A,ctx); ok('FE 8: 0,8·6 + 0,2·8 = 6,4 → 6', f.propuesta, 6); ok('caso general', f.caso, 'general');
+ctx.finales[0].filas[A].fe=4; ok('FE 4: caso A', N.notaFinal(m79,A,ctx).caso, 'A');
+ctx.finales[0].filas[A].fe=3; f=N.notaFinal(m79,A,ctx); ok('FE 3: caso B', f.caso, 'B'); ok('B: 0,8·6+0,2·3 = 5,4 → 5', f.propuesta, 5);
+ctx.finales[0].filas[A].fe='exento'; f=N.notaFinal(m79,A,ctx); ok('exento: caso E', f.caso, 'E'); ok('exento: nota = FC', f.propuesta, 6);
+ctx.finales[0].filas[A].fe='nocursa'; ok('no cursa: NE', N.notaFinal(m79,A,ctx).propuesta, 'NE');
+// FC con RA < 5 y recuperación
+ctx=todoMod(m79,(c)=>c.ra==='RA4'?3:8); ctx.finales=[{modulo:'1279',filas:{[A]:{fe:10}}}];
+f=N.notaFinal(m79,A,ctx); ok('RA4 = 3: FC boletín máx 4', f.fcBoletin, 4); ok('caso D', f.caso, 'D');
+ok('D: 0,8·7 + 0,2·10 = 7,6 → máx 5', f.propuesta, 5);
+ctx.finales[0].filas[A].rec={RA4:6};
+f=N.notaFinal(m79,A,ctx); ok('recupera RA4 con 6: FC real', f.fcReal, 7.6); ok('FC boletín', f.fcBoletin, 8); ok('recuperados', f.recuperados, 1);
+ok('propuesta 0,8·7,6 + 2 = 8,08 → 8', f.propuesta, 8);
+// FC ≤ 3: caso C
+ctx=todoMod(m79,()=>2); ctx.finales=[{modulo:'1279',filas:{[A]:{fe:10}}}];
+f=N.notaFinal(m79,A,ctx); ok('FC 2: caso C', f.caso, 'C'); ok('C: máx 4', f.propuesta, 4);
+// Ajustes de actitud: media de las evaluaciones
+ctx=todoMod(m79,()=>6); ctx.ajustes=[{modulo:'1279',ev:1,filas:{[A]:1}}];
+ok('ajuste medio (1 + 0)/2', N.notaFinal(m79,A,ctx).fcReal, 6.5);
+// Mención honorífica
+ctx=todoMod(m79,()=>10); ctx.finales=[{modulo:'1279',filas:{[A]:{fe:10}}}];
+ok('todo 10: candidato MH', N.notaFinal(m79,A,ctx).candidatoMH, true);
+ctx.finales[0].filas[A].rec={RA1:10};
+ok('con un RA recuperado: no es candidato', N.notaFinal(m79,A,ctx).candidatoMH, false);
+// Incompleta
+ctx=todoMod(m79,(c)=>c.ra==='RA5'?null:6); ctx.practicas=ctx.practicas.filter(p=>Object.values(p.filas)[0].valor!==null); ctx.calificaciones=ctx.calificaciones.filter(c=>Object.values(c.filas)[0].notas[c.ces[0]]!==null);
+f=N.notaFinal(m79,A,ctx); ok('sin RA5: FC sin calcular', f.fcReal, null); ok('incompleta', f.completa, false);
+
 console.log(fallos? `\n${fallos} FALLOS` : '\nTodas las pruebas correctas');

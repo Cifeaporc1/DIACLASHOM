@@ -4,6 +4,8 @@ import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
 import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta } from './util.js';
 import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
+import * as Cierre from './cierre.js';
+import * as Exportar from './exportar.js';
 
 const raiz = document.getElementById('app');
 let pantallaEditable = false;
@@ -221,6 +223,11 @@ async function vistaAjustes() {
   const correo = await D.correoGuardado();
   const curso = D.uno('curso');
   marco('Más', `
+    <h2>Exportar</h2>
+    <div class="tarjeta botones">
+      <button class="boton" type="button" id="b-excel">Descargar Excel con todos los datos</button>
+      <p class="sub" style="margin:0">Se genera en este aparato. El archivo no va cifrado: guárdalo como un documento de evaluación.</p>
+    </div>
     <h2>Organización</h2>
     <a class="tarjeta" href="#/reuniones"><div class="titulo">Reuniones y tareas</div><div class="sub">Departamento, claustros, equipos docentes y lo que te toca hacer</div></a>
     <h2>Programación</h2>
@@ -252,6 +259,14 @@ async function vistaAjustes() {
   document.getElementById('b-sincronizar').addEventListener('click', () => D.sincronizar());
   document.getElementById('b-bloquear').addEventListener('click', () => { D.bloquear(); });
   document.getElementById('b-copia').addEventListener('click', descargarCopia);
+  document.getElementById('b-excel').addEventListener('click', async (ev) => {
+    const b = ev.currentTarget;
+    b.disabled = true;
+    b.textContent = 'Preparando el Excel…';
+    try { await Exportar.descargarExcel(); } catch (e) { alert(`No se ha podido generar el Excel: ${e.message}`); }
+    b.disabled = false;
+    b.textContent = 'Descargar Excel con todos los datos';
+  });
   document.getElementById('b-olvidar').addEventListener('click', async () => {
     const pendientes = await D.pendientes();
     const extra = pendientes ? ` Hay ${pendientes} cambios sin subir que se perderán.` : '';
@@ -293,6 +308,9 @@ async function pintar() {
       case 'practica': return Calificar.vistaPractica(param);
       case 'calificacion': return param === 'nueva' ? Calificar.nuevaCalificacion(q) : Calificar.vistaCalificacion(param);
       case 'libreta': return Calificar.vistaLibreta(param);
+      case 'faltas': return Cierre.vistaFaltas(param);
+      case 'final': return Cierre.vistaFinal(param);
+      case 'final-alumno': { const [mod, clave] = location.hash.split('?')[0].split('/').slice(2).map(decodeURIComponent); return Cierre.vistaFinalAlumno(mod, clave); }
       case 'nota-alumno': { const [mod, clave] = location.hash.split('?')[0].split('/').slice(2).map(decodeURIComponent); return Calificar.vistaNotaAlumno(mod, clave, q); }
       case 'reunion': return Diario.vistaReunion(param);
       case 'modulos': return vistaModulos();
@@ -348,4 +366,5 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 
 Diario.configurar({ marco });
 Calificar.configurar({ marco });
+Cierre.configurar({ marco });
 pintar();
