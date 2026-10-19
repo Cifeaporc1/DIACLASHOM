@@ -36,7 +36,15 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `supabase/esquema.sql` | Tablas y seguridad por filas |
 | `js/cierre.js` | Faltas, recuperaciones, empresa y nota final |
 | `js/exportar.js` | Exportación a Excel |
+| `js/ical.js` | Lector de calendarios iCal (eventos repetidos, excepciones) |
+| `js/agenda.js` | Google Calendar en Hoy y en la Semana; crear reunión o salida desde un evento |
+| `supabase/funciones/calendario/index.ts` | Función de Supabase que lee la dirección iCal secreta (Google no deja leerla desde el navegador). Solo acepta direcciones de calendar.google.com y exige sesión iniciada |
+| `pruebas/ical.test.mjs` | `TZ=Europe/Madrid node pruebas/ical.test.mjs` |
 | `vendor/` | supabase-js 2.117.2 (MIT) y SheetJS 0.18.5 (Apache 2.0) |
+
+## Google Calendar (solo lectura)
+
+La dirección iCal secreta se guarda cifrada como un registro más. La app la envía a la función `calendario` de Supabase, que descarga el calendario y lo devuelve; la función no guarda nada. La app no escribe en Google.
 
 ## Fases
 

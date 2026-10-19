@@ -1,6 +1,7 @@
 // Fase 2: diario de sesiones, salidas, anotaciones, charlas y reuniones.
 import * as D from './datos.js';
 import * as Calificar from './calificar.js';
+import * as Agenda from './agenda.js';
 import {
   esc, hoyISO, aFecha, fechaLarga, fechaCorta, minutos, hhmm, horaInput, horaCorta,
   modulo, grupo, grupos, modulos, modulosDeGrupo, alumnosDe, alumno, utsDe, listas,
@@ -134,6 +135,7 @@ export function vistaHoy() {
   do { siguiente.setDate(siguiente.getDate() + 1); } while ([0, 6].includes(siguiente.getDay()));
   const tareas = tareasPendientes();
   const recientes = sesiones().filter((s) => s.fecha < fecha).slice(0, 3);
+  const agenda = Agenda.bloqueHoy();
   marco('Hoy', `
     <h2>${esc(fechaLarga(fecha))}</h2>
     <div class="tarjeta">${pintarBloques(fecha, bloques, true)}</div>
@@ -141,6 +143,7 @@ export function vistaHoy() {
       <button class="boton secundario" type="button" id="b-otra-sesion">Sesión fuera de horario</button>
       <a class="boton secundario" href="#/anotar?volver=hoy">Anotación rápida</a>
     </div>
+    ${agenda.html}
     <h2>Tareas pendientes${tareas.length ? ` · ${tareas.length}` : ''}</h2>
     <div class="tarjeta">${pintarTareas(tareas)}<a class="boton secundario" href="#/reuniones">Reuniones</a></div>
     <h2>Próximo día de clase · ${esc(fechaLarga(hoyISO(siguiente)))}</h2>
@@ -159,6 +162,7 @@ export function vistaHoy() {
     ir(`#/sesion/${s.id}`);
   });
   enlazarTareas();
+  agenda.enlazar();
 }
 
 // ---------- Diario: lista de sesiones ----------

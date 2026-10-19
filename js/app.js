@@ -3,6 +3,7 @@ import * as D from './datos.js';
 import { VERSION_APP, BLOQUEO_INACTIVIDAD } from './config.js';
 import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta, nombreHTML, nombresOcultos, alternarNombres } from './util.js';
 import * as Nombres from './nombres.js';
+import * as Agenda from './agenda.js';
 import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
 import * as Cierre from './cierre.js';
@@ -235,6 +236,8 @@ async function vistaAjustes() {
     <h2>Alumnos</h2>
     <a class="tarjeta" href="#/nombres"><div class="titulo">Nombres de alumnos</div><div class="sub">${D.porTipo('alumno').filter((a) => a.apellido1 || a.nombre).length} de ${D.porTipo('alumno').filter((a) => a.activo !== false).length} con nombre · importar desde Excel</div></a>
     <h2>Organización</h2>
+    <a class="tarjeta" href="#/semana"><div class="titulo">Semana</div><div class="sub">Tus clases y los eventos de Google Calendar</div></a>
+    <a class="tarjeta" href="#/calendario"><div class="titulo">Google Calendar</div><div class="sub">${D.uno('calendario') ? 'Conectado · cambiar o desconectar' : 'Conectar un calendario (solo lectura)'}</div></a>
     <a class="tarjeta" href="#/reuniones"><div class="titulo">Reuniones y tareas</div><div class="sub">Departamento, claustros, equipos docentes y lo que te toca hacer</div></a>
     <h2>Programación</h2>
     <a class="tarjeta" href="#/modulos"><div class="titulo">Módulos, RA y CE</div><div class="sub">Pesos, instrumentos, unidades de trabajo y límites de faltas</div></a>
@@ -327,6 +330,8 @@ async function pintar() {
       case 'alumnos': return vistaAlumnos();
       case 'alumno': return Diario.vistaAlumno(param);
       case 'nombres': return Nombres.vistaNombres();
+      case 'semana': return Agenda.vistaSemana(q);
+      case 'calendario': return Agenda.vistaCalendario();
       case 'ajustes': return await vistaAjustes();
       default: return Diario.vistaHoy();
     }
@@ -378,4 +383,5 @@ Diario.configurar({ marco });
 Calificar.configurar({ marco });
 Cierre.configurar({ marco });
 Nombres.configurar({ marco });
+Agenda.configurar({ marco, pintar: () => pintar() });
 pintar();

@@ -74,3 +74,15 @@ export async function bajar(desde, limite = 500) {
   if (error) throw fallo(error, 'Descarga');
   return data;
 }
+
+// Calendario de Google (solo lectura) a través de la función «calendario» del propio Supabase.
+export async function leerCalendario(url) {
+  const { data, error } = await sb().functions.invoke('calendario', { body: { url } });
+  if (error) {
+    let detalle = error.message;
+    try { const cuerpo = await error.context?.json?.(); if (cuerpo?.error) detalle = cuerpo.error; } catch { /* sin detalle */ }
+    throw new Error(detalle);
+  }
+  if (data?.error) throw new Error(data.error);
+  return data.ics;
+}
