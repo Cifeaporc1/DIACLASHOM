@@ -50,7 +50,7 @@ function creadoDesde(e) {
   return D.porTipo('reunion').find((x) => x.origenCalendario === k) || D.porTipo('sesion').find((x) => x.origenCalendario === k);
 }
 
-function tarjetaEvento(e, i) {
+export function tarjetaEvento(e, i) {
   const ya = creadoDesde(e);
   return `<details class="evento">
     <summary>
@@ -87,9 +87,16 @@ async function crearDesde(e, tipo) {
   }
 }
 
-function enlazarEventos(lista) {
+export function enlazarEventos(lista) {
   $$('[data-crear]').forEach((b) => b.addEventListener('click', () => { b.disabled = true; crearDesde(lista[Number(b.dataset.ev)], b.dataset.crear); }));
 }
+
+// Eventos de Google entre dos fechas para otras pantallas (null si aún no se han leído).
+export function eventosGoogle(desde, hasta, ruta) {
+  if (configCalendario()?.url) cargarYRepintar(ruta);
+  return cache.eventos ? eventosEntre(cache.eventos, desde, hasta) : null;
+}
+export const estadoGoogle = () => ({ conectado: !!configCalendario()?.url, error: cache.error, leido: !!cache.eventos });
 
 // Bloque para la pantalla Hoy.
 export function bloqueHoy() {
