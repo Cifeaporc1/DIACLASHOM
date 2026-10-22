@@ -37,7 +37,7 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `js/cierre.js` | Faltas, recuperaciones, empresa y nota final |
 | `js/exportar.js` | Exportación a Excel |
 | `js/ical.js` | Lector de calendarios iCal (eventos repetidos, excepciones) |
-| `js/curso.js` | Calendario del curso (mes: calendario escolar + Google + tus clases) y horarios (tuyo, 1.º y 2.º). El calendario escolar y los horarios de grupo se importan desde un .json que no está en el repositorio (lleva nombres de compañeros) y se guardan cifrados |
+| `js/curso.js` | Calendario del curso (mes: calendario escolar + Google + tus clases) y horarios (tuyo, 1.º y 2.º). El calendario escolar y los horarios de grupo vienen en `datos/calendario-horarios-2026-2027.json` (con nombres de profesores, por decisión de Luis); se puede importar otro archivo desde la app y entonces se guarda cifrado |
 | `js/agenda.js` | Google Calendar en Hoy y en la Semana; crear reunión o salida desde un evento |
 | `supabase/funciones/calendario/index.ts` | Función de Supabase que lee la dirección iCal secreta (Google no deja leerla desde el navegador). Solo acepta direcciones de calendar.google.com y exige sesión iniciada |
 | `pruebas/ical.test.mjs` | `TZ=Europe/Madrid node pruebas/ical.test.mjs` |

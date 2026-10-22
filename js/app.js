@@ -388,5 +388,5 @@ Calificar.configurar({ marco });
 Cierre.configurar({ marco });
 Nombres.configurar({ marco });
 Agenda.configurar({ marco, pintar: () => pintar() });
-Curso.configurar({ marco });
+Curso.configurar({ marco, pintar: () => pintar() });
 pintar();

@@ -1,13 +1,36 @@
 // Calendario del curso (mes) y horarios (el tuyo y los de cada grupo).
-// El calendario escolar y los horarios de grupo se importan desde un archivo .json y se guardan cifrados
-// (los horarios de grupo llevan nombres de compañeros: no van en el repositorio público).
+// El calendario escolar y los horarios de grupo vienen incluidos en datos/calendario-horarios-2026-2027.json
+// (decisión de Luis: también con los nombres de los profesores). Si se importa otro archivo desde la app,
+// se guarda cifrado y tiene prioridad sobre el incluido.
 import * as D from './datos.js';
 import * as Agenda from './agenda.js';
 import { esc, hoyISO, aFecha, fechaLarga, minutos, hhmm, modulo, grupo, etiqueta, horaCorta } from './util.js';
 import { bloquesDelDia } from './diario.js';
 
 let marco = null;
-export function configurar(opciones) { marco = opciones.marco; }
+let repintar = () => {};
+export function configurar(opciones) {
+  marco = opciones.marco;
+  repintar = opciones.pintar || repintar;
+}
+
+// Datos incluidos con la app (se leen una vez y quedan en la caché de la app para usarla sin conexión).
+const ARCHIVO_INCLUIDO = 'datos/calendario-horarios-2026-2027.json';
+let incluido = null;
+let pidiendo = null;
+function cargarIncluido() {
+  if (incluido || pidiendo) return;
+  pidiendo = fetch(ARCHIVO_INCLUIDO)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((j) => {
+      if (j?.diaclashom !== 'importacion') return;
+      incluido = j;
+      const h = location.hash;
+      if (h.startsWith('#/mes') || h.startsWith('#/horarios') || h === '' || h.startsWith('#/hoy')) repintar();
+    })
+    .catch(() => {})
+    .finally(() => { pidiendo = null; });
+}
 const raiz = () => document.getElementById('app');
 const $ = (sel) => raiz().querySelector(sel);
 
@@ -16,8 +39,18 @@ const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const DIAS_CORTOS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 const FRANJA = 55;
 
-const escolar = () => D.uno('calEscolar');
-const horarioGrupo = (g) => D.porTipo('horarioGrupo').find((h) => h.grupo === g);
+function escolar() {
+  const propio = D.uno('calEscolar');
+  if (propio) return propio;
+  cargarIncluido();
+  return incluido?.calendarioEscolar ? { fuente: incluido.calendarioEscolar.fuente, eventos: incluido.calendarioEscolar.eventos } : null;
+}
+function horarioGrupo(g) {
+  const propio = D.porTipo('horarioGrupo').find((h) => h.grupo === g);
+  if (propio) return propio;
+  cargarIncluido();
+  return (incluido?.horariosGrupo || []).find((h) => h.grupo === g);
+}
 
 // ---------- Calendario escolar ----------
 
@@ -101,7 +134,7 @@ export function vistaMes(q) {
 
   marco('Calendario', `
     ${pestanas('mes')}
-    ${!escolar() ? '<a class="tarjeta" href="#/horarios?v=importar"><div class="titulo">Falta el calendario escolar</div><div class="sub">Importa el archivo de calendario y horarios</div></a>' : ''}
+    ${!escolar() ? '<p class="vacio">Cargando el calendario escolar…</p>' : ''}
     <div class="nav-semana">
       <a class="boton pequeno secundario" href="#/mes?${new URLSearchParams({ m: mesAnt, ...(filtro ? { g: filtro } : {}) })}">‹</a>
       <strong class="mes-titulo">${esc(nombreMes)}</strong>
@@ -194,7 +227,7 @@ function tablaHorario(franjas) {
 
 export function vistaHorarios(q, mensaje) {
   const v = ['mio', 'G1', 'G2', 'importar'].includes(q.v) ? q.v : 'mio';
-  const hay = D.porTipo('horarioGrupo').length > 0;
+  const propios = D.porTipo('horarioGrupo').length > 0 || !!D.uno('calEscolar');
   const ver = v === 'mio' ? franjasMias() : (horarioGrupo(v)?.franjas || []);
   marco('Calendario', `
     ${pestanas('horarios')}
@@ -203,16 +236,18 @@ export function vistaHorarios(q, mensaje) {
       ${[['mio', 'Mío'], ['G1', '1.º GASA'], ['G2', '2.º GASA']].map(([k, t]) => `<a class="chip-filtro ${v === k ? 'activo' : ''}" href="#/horarios?v=${k}">${t}</a>`).join('')}
     </div>
     ${v === 'importar' ? '' : (v !== 'mio' && !horarioGrupo(v)
-      ? '<p class="vacio">Aún no has importado los horarios de los grupos.</p>'
+      ? '<p class="vacio">Cargando el horario…</p>'
       : `<div class="tarjeta horario-tarjeta">${tablaHorario(ver)}</div>`)}
-    <h2>Calendario escolar y horarios de grupo</h2>
-    <form class="tarjeta formulario" id="f-importar">
-      <p class="ayuda" style="margin:0">${escolar() || hay
-        ? `Importado: ${escolar() ? `${escolar().eventos.length} fechas del calendario escolar` : 'sin calendario escolar'} · ${D.porTipo('horarioGrupo').length} horarios de grupo. Si importas otro archivo, sustituye a estos.`
-        : 'Elige el archivo «diaclashom-calendario-horarios» que te he preparado. Se guarda cifrado y pasa solo al otro aparato.'}</p>
-      <label class="campo"><span>Archivo .json</span><input type="file" name="archivo" accept=".json,application/json" required></label>
-      <div class="botones"><button class="boton ${escolar() || hay ? 'secundario' : ''}" type="submit">Importar</button></div>
-    </form>
+    <details class="tarjeta importar">
+      <summary>Cambiar calendario u horarios</summary>
+      <form class="formulario" id="f-importar">
+        <p class="ayuda" style="margin:0">${propios
+          ? 'Estás usando un archivo importado por ti. Si importas otro, sustituye a este.'
+          : 'Ahora ves los que vienen con la app. Si cambian los horarios o el calendario, pásame los nuevos y te preparo un archivo para cargarlo aquí.'}</p>
+        <label class="campo"><span>Archivo .json</span><input type="file" name="archivo" accept=".json,application/json" required></label>
+        <div class="botones"><button class="boton secundario" type="submit">Importar</button></div>
+      </form>
+    </details>
   `, { volver: '#/ajustes', pestana: 'ajustes' });
 
   $('#f-importar').addEventListener('submit', async (ev) => {

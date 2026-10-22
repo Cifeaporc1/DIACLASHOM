@@ -1,0 +1,870 @@
+{
+ "diaclashom": "importacion",
+ "version": 1,
+ "curso": "2026-2027",
+ "calendarioEscolar": {
+  "fuente": "Calendario escolar 2026-2027 · CIFEA de Lorca",
+  "eventos": [
+   {
+    "fecha": "2026-09-14",
+    "texto": "Inicio del periodo lectivo de FP",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-21",
+    "texto": "Fin de curso",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-10-20",
+    "texto": "Evaluación inicial (cada profesor)",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-09-14",
+    "texto": "1.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "periodo",
+    "hasta": "2026-12-22"
+   },
+   {
+    "fecha": "2026-12-17",
+    "texto": "Sesión de la 1.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-12-22",
+    "texto": "Entrega de calificaciones de la 1.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-01-08",
+    "texto": "Plazo de reclamación de la 1.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-01-14"
+   },
+   {
+    "fecha": "2027-01-08",
+    "texto": "2.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-03-18"
+   },
+   {
+    "fecha": "2027-03-16",
+    "texto": "Sesión de la 2.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-03-18",
+    "texto": "Entrega de calificaciones de la 2.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-03-30",
+    "texto": "Plazo de reclamación de la 2.ª evaluación",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-04-05"
+   },
+   {
+    "fecha": "2027-03-30",
+    "texto": "1.ª evaluación final ordinaria",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-21"
+   },
+   {
+    "fecha": "2027-06-01",
+    "texto": "Exámenes de la 1.ª final ordinaria (suficiencia)",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-06-07"
+   },
+   {
+    "fecha": "2027-06-10",
+    "texto": "Sesión de la 1.ª evaluación final ordinaria",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-11",
+    "texto": "Entrega de calificaciones de la 1.ª final ordinaria",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-11",
+    "texto": "Programa de recuperación (clases y pruebas)",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-21"
+   },
+   {
+    "fecha": "2027-06-14",
+    "texto": "Plazo de reclamación de la 1.ª final ordinaria",
+    "grupos": [
+     "G1"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-06-15"
+   },
+   {
+    "fecha": "2026-09-14",
+    "texto": "1.ª evaluación",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2026-12-22"
+   },
+   {
+    "fecha": "2026-09-10",
+    "texto": "FEM (repetidores)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2026-12-15"
+   },
+   {
+    "fecha": "2026-09-11",
+    "texto": "FCT (repetidores)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2026-11-30"
+   },
+   {
+    "fecha": "2026-12-01",
+    "texto": "Proyecto (repetidores): entrega por correo electrónico",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-12-03",
+    "texto": "Proyecto (repetidores): entrega en papel",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-12-09",
+    "texto": "Exposición y defensa de proyectos (repetidores)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2026-12-11"
+   },
+   {
+    "fecha": "2026-12-17",
+    "texto": "Sesión de la 1.ª evaluación",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2026-12-22",
+    "texto": "Entrega de calificaciones de la 1.ª evaluación",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-01-08",
+    "texto": "Plazo de reclamación de la 1.ª evaluación",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-01-14"
+   },
+   {
+    "fecha": "2027-01-08",
+    "texto": "1.ª final ordinaria (fase centro, acceso a la FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-03-01"
+   },
+   {
+    "fecha": "2027-02-18",
+    "texto": "Exámenes de la 1.ª final ordinaria (suficiencia)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-02-24"
+   },
+   {
+    "fecha": "2027-02-26",
+    "texto": "Sesión de la 1.ª final ordinaria (acceso a la FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-03-01",
+    "texto": "Entrega de calificaciones (acceso a la FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-03-02",
+    "texto": "Plazo de reclamación (acceso a la FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-03-03"
+   },
+   {
+    "fecha": "2027-03-02",
+    "texto": "FEM (500 h, 8 h/día, incluida Semana Santa)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-08"
+   },
+   {
+    "fecha": "2027-03-02",
+    "texto": "Actividades de refuerzo (alumnos que no acceden a la FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-08"
+   },
+   {
+    "fecha": "2027-03-16",
+    "texto": "FCT (plan antiguo)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-08"
+   },
+   {
+    "fecha": "2027-06-10",
+    "texto": "Sesión de la 1.ª evaluación final ordinaria (ponderación centro y FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-11",
+    "texto": "Entrega de calificaciones de la 1.ª final ordinaria",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-11",
+    "texto": "Programa de recuperación en centro (o completar FEM)",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "periodo",
+    "hasta": "2027-06-21"
+   },
+   {
+    "fecha": "2027-06-14",
+    "texto": "Plazo de reclamación de la 1.ª final ordinaria",
+    "grupos": [
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-06-15"
+   },
+   {
+    "fecha": "2027-06-16",
+    "texto": "Exámenes de la 2.ª final ordinaria",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-06-21"
+   },
+   {
+    "fecha": "2027-06-22",
+    "texto": "Sesión de la 2.ª evaluación final ordinaria",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-23",
+    "texto": "Entrega de calificaciones de la 2.ª final ordinaria",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha"
+   },
+   {
+    "fecha": "2027-06-24",
+    "texto": "Plazo de reclamación de la 2.ª final ordinaria",
+    "grupos": [
+     "G1",
+     "G2"
+    ],
+    "clase": "fecha",
+    "hasta": "2027-06-25"
+   }
+  ]
+ },
+ "horariosGrupo": [
+  {
+   "grupo": "G1",
+   "nombre": "1.º GASA",
+   "franjas": [
+    {
+     "dia": 1,
+     "inicio": "8:30",
+     "texto": "Maquinaria e inst. ganaderas",
+     "corto": "Maquin.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 1,
+     "inicio": "9:25",
+     "texto": "Maquinaria e inst. ganaderas",
+     "corto": "Maquin.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 1,
+     "inicio": "10:20",
+     "texto": "Maquinaria e inst. ganaderas",
+     "corto": "Maquin.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 1,
+     "inicio": "11:45",
+     "texto": "Gest. Recría Caballos",
+     "corto": "1276 GRC",
+     "profe": "LUIS",
+     "color": "#ffc000"
+    },
+    {
+     "dia": 1,
+     "inicio": "12:40",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 1,
+     "inicio": "13:35",
+     "texto": "Bioseguridad",
+     "corto": "Bioseg.",
+     "profe": "ROSA",
+     "color": "#f7b9b9"
+    },
+    {
+     "dia": 2,
+     "inicio": "8:30",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 2,
+     "inicio": "9:25",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 2,
+     "inicio": "10:20",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 2,
+     "inicio": "11:45",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 2,
+     "inicio": "12:40",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 2,
+     "inicio": "13:35",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 3,
+     "inicio": "8:30",
+     "texto": "Inglés",
+     "corto": "Inglés",
+     "profe": "SANDRA",
+     "color": "#ededed"
+    },
+    {
+     "dia": 3,
+     "inicio": "9:25",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 3,
+     "inicio": "10:20",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 3,
+     "inicio": "11:45",
+     "texto": "O.C.R.C.",
+     "corto": "1274 OCRC",
+     "profe": "LUIS",
+     "color": "#8eb4f4"
+    },
+    {
+     "dia": 3,
+     "inicio": "12:40",
+     "texto": "I.P.E.",
+     "corto": "IPE",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 3,
+     "inicio": "13:35",
+     "texto": "I.P.E.",
+     "corto": "IPE",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 4,
+     "inicio": "8:30",
+     "texto": "Gest. Recría Caballos",
+     "corto": "1276 GRC",
+     "profe": "LUIS",
+     "color": "#ffc000"
+    },
+    {
+     "dia": 4,
+     "inicio": "9:25",
+     "texto": "Gest. Recría Caballos",
+     "corto": "1276 GRC",
+     "profe": "LUIS",
+     "color": "#ffc000"
+    },
+    {
+     "dia": 4,
+     "inicio": "10:20",
+     "texto": "Gest. Recría Caballos",
+     "corto": "1276 GRC",
+     "profe": "LUIS",
+     "color": "#ffc000"
+    },
+    {
+     "dia": 4,
+     "inicio": "11:45",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 4,
+     "inicio": "12:40",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 4,
+     "inicio": "13:35",
+     "texto": "G.P.A.",
+     "corto": "GPA",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 5,
+     "inicio": "8:30",
+     "texto": "Bioseguridad",
+     "corto": "Bioseg.",
+     "profe": "ROSA",
+     "color": "#f7b9b9"
+    },
+    {
+     "dia": 5,
+     "inicio": "9:25",
+     "texto": "Bioseguridad",
+     "corto": "Bioseg.",
+     "profe": "ROSA",
+     "color": "#f7b9b9"
+    },
+    {
+     "dia": 5,
+     "inicio": "10:20",
+     "texto": "Bioseguridad",
+     "corto": "Bioseg.",
+     "profe": "ROSA",
+     "color": "#f7b9b9"
+    },
+    {
+     "dia": 5,
+     "inicio": "11:45",
+     "texto": "Digitalización",
+     "corto": "Digital.",
+     "profe": "ROCÍO",
+     "color": "#7fd497"
+    },
+    {
+     "dia": 5,
+     "inicio": "12:40",
+     "texto": "I.P.E.",
+     "corto": "IPE",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 5,
+     "inicio": "13:35",
+     "texto": "Inglés",
+     "corto": "Inglés",
+     "profe": "SANDRA",
+     "color": "#ededed"
+    }
+   ]
+  },
+  {
+   "grupo": "G2",
+   "nombre": "2.º GASA",
+   "franjas": [
+    {
+     "dia": 1,
+     "inicio": "8:30",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 1,
+     "inicio": "9:25",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 1,
+     "inicio": "10:20",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 1,
+     "inicio": "11:45",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 1,
+     "inicio": "12:40",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 1,
+     "inicio": "13:35",
+     "texto": "I.P.E. II",
+     "corto": "IPE II",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 2,
+     "inicio": "8:30",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    },
+    {
+     "dia": 2,
+     "inicio": "9:25",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    },
+    {
+     "dia": 2,
+     "inicio": "10:20",
+     "texto": "Postmorten",
+     "corto": "Postm.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 2,
+     "inicio": "11:45",
+     "texto": "Gestión centros Veterinarios",
+     "corto": "Gest. Vet.",
+     "profe": "ANA",
+     "color": "#ffff3b"
+    },
+    {
+     "dia": 2,
+     "inicio": "12:40",
+     "texto": "Gestión centros Veterinarios",
+     "corto": "Gest. Vet.",
+     "profe": "ANA",
+     "color": "#ffff3b"
+    },
+    {
+     "dia": 2,
+     "inicio": "13:35",
+     "texto": "Gestión centros Veterinarios",
+     "corto": "Gest. Vet.",
+     "profe": "ANA",
+     "color": "#ffff3b"
+    },
+    {
+     "dia": 3,
+     "inicio": "8:30",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    },
+    {
+     "dia": 3,
+     "inicio": "9:25",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    },
+    {
+     "dia": 3,
+     "inicio": "10:20",
+     "texto": "Sostenibilidad",
+     "corto": "Sostenib.",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 3,
+     "inicio": "11:45",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 3,
+     "inicio": "12:40",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 3,
+     "inicio": "13:35",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 4,
+     "inicio": "8:30",
+     "texto": "Postmorten",
+     "corto": "Postm.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 4,
+     "inicio": "9:25",
+     "texto": "I.P.E. II",
+     "corto": "IPE II",
+     "profe": "MARIEN",
+     "color": "#f45cd2"
+    },
+    {
+     "dia": 4,
+     "inicio": "10:20",
+     "texto": "Proyecto",
+     "corto": "Proyecto",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 4,
+     "inicio": "11:45",
+     "texto": "Gestión centros Veterinarios",
+     "corto": "Gest. Vet.",
+     "profe": "ANA",
+     "color": "#ffff3b"
+    },
+    {
+     "dia": 4,
+     "inicio": "12:40",
+     "texto": "Asistencia Veterinaria",
+     "corto": "Asist. Vet.",
+     "profe": "MIGUEL A.",
+     "color": "#c9c9c9"
+    },
+    {
+     "dia": 4,
+     "inicio": "13:35",
+     "texto": "Gestión centros Veterinarios",
+     "corto": "Gest. Vet.",
+     "profe": "ANA",
+     "color": "#ffff3b"
+    },
+    {
+     "dia": 5,
+     "inicio": "8:30",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 5,
+     "inicio": "9:25",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 5,
+     "inicio": "10:20",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 5,
+     "inicio": "11:45",
+     "texto": "Saneamiento Ganadero",
+     "corto": "1279 SG",
+     "profe": "LUIS",
+     "color": "#92d050"
+    },
+    {
+     "dia": 5,
+     "inicio": "12:40",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    },
+    {
+     "dia": 5,
+     "inicio": "13:35",
+     "texto": "Doma",
+     "corto": "Doma",
+     "profe": "MANOLO",
+     "color": "#fde3a7"
+    }
+   ]
+  }
+ ]
+}
