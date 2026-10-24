@@ -101,9 +101,11 @@ export function notaCE(mod, ce, clave, ctx) {
       out.estado = 'Examen práctico';
       out.aportes.push({ valor: out.valor, peso: 0, motivo: 'Examen práctico final (sustituye)' });
     }
+    // La libreta es imprescindible para evaluar las prácticas: si no la entrega, sus CE PP quedan sin evaluar (NE).
     if (mod.libretaImprescindible && filaLibreta && filaLibreta.entregada === false) {
-      out.valor = 0;
-      out.estado = 'Sin libreta';
+      out.valor = null;
+      out.estado = 'NE: sin libreta';
+      out.sinLibreta = true;
     }
     return out;
   }
@@ -133,6 +135,7 @@ export function notaRA(mod, ra, clave, ctx) {
     valor: mediaPonderada(con.map((c) => [c.valor, c.peso])),
     ces,
     faltan: ces.length - con.length,
+    sinLibreta: ces.some((c) => c.sinLibreta),
   };
 }
 
@@ -187,9 +190,11 @@ export function notaEvaluacion(mod, ev, clave, ctx) {
   }
   const faltas = faltasHasta(mod, ev, clave, ctx);
   const perdidaEC = faltas.supera;
+  const sinLibreta = ras.some((r) => r.sinLibreta);
+  if (sinLibreta) { real = null; boletin = null; }
   return {
-    ev: Number(ev), ras, base, ajuste, real, boletin, completa, faltanCE, raBajo, faltas, perdidaEC,
-    boletinTexto: perdidaEC ? 'NE' : (boletin === null ? '—' : String(boletin)),
+    ev: Number(ev), ras, base, ajuste, real, boletin, completa, faltanCE, raBajo, faltas, perdidaEC, sinLibreta,
+    boletinTexto: perdidaEC || sinLibreta ? 'NE' : (boletin === null ? '—' : String(boletin)),
   };
 }
 
@@ -220,7 +225,8 @@ export function notaFinal(mod, clave, ctx) {
   const fila = reg?.filas?.[clave] || {};
   const rec = fila.rec || {};
   const ras = mod.ra.map((r) => {
-    const original = notaRA(mod, r, clave, ctx).valor;
+    const nr = notaRA(mod, r, clave, ctx);
+    const original = nr.sinLibreta ? null : nr.valor; // sin libreta, ese RA queda pendiente hasta que la entregue o recupere
     const recuperacion = aNumero(rec[r.codigo]);
     return { codigo: r.codigo, peso: r.peso, ev: r.ev, original, recuperacion, def: recuperacion !== null ? recuperacion : original };
   });

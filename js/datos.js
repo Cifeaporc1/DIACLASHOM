@@ -43,9 +43,10 @@ export async function desbloquear(clave) {
   if (!(await C.comprobarVerificador(llave, ver))) throw new Error('Clave incorrecta.');
   estado.llave = llave;
   await cargarLocal();
+  await migrar();
   avisar();
   // La sesión con la nube se renueva en segundo plano; sin conexión la app funciona igual.
-  asegurarSesion(clave).then(() => sincronizar()).catch((e) => { estado.aviso = e.message; avisar(); });
+  asegurarSesion(clave).then(() => sincronizar()).then(() => migrar()).catch((e) => { estado.aviso = e.message; avisar(); });
 }
 
 async function asegurarSesion(clave) {
@@ -87,6 +88,7 @@ export async function primerAcceso(correo, clave, crear) {
     await sembrar();
     await sincronizar();
   }
+  await migrar();
   avisar();
 }
 
@@ -244,6 +246,41 @@ export async function sembrar() {
   objetos.push({ tipo: 'horario', curso: p.curso, franjas: p.horario });
   objetos.push({ tipo: 'listas', encargadoItems: p.encargadoItems, libretaApartados: p.libretaApartados, tiposAnotacion: p.tiposAnotacion });
   await guardar(objetos);
+}
+
+// ---------- Cambios en los datos ya guardados ----------
+// Cada cambio se aplica una vez (queda anotado en «listas.migraciones») y es seguro repetirlo.
+
+export const LIBRETA_APARTADOS = [
+  { nombre: 'Entrega / presentación', peso: 0.2 },
+  { nombre: 'Redacción / lenguaje técnico', peso: 0.2 },
+  { nombre: 'Limpieza / claridad', peso: 0.2 },
+  { nombre: 'Datos', peso: 0.2 },
+  { nombre: 'Ortografía', peso: 0.2 },
+];
+
+export async function migrar() {
+  if (!estado.llave) return;
+  const listas = uno('listas');
+  if (!listas) return;
+  const hechas = listas.migraciones || [];
+  const cambios = [];
+  // Normas de la libreta (oct. 2026): 5 apartados al 20 % («Entrega / presentación» el primero)
+  // y libreta imprescindible en los tres módulos.
+  if (!hechas.includes('libreta-5-apartados')) {
+    listas.libretaApartados = LIBRETA_APARTADOS;
+    for (const l of porTipo('libreta')) {
+      let cambia = false;
+      for (const f of Object.values(l.filas || {})) {
+        if (Array.isArray(f.apartados) && f.apartados.length === 4) { f.apartados = [null, ...f.apartados]; cambia = true; }
+      }
+      if (cambia) cambios.push(l);
+    }
+    for (const m of porTipo('modulo')) if (m.libretaImprescindible !== true) { m.libretaImprescindible = true; cambios.push(m); }
+    listas.migraciones = [...hechas, 'libreta-5-apartados'];
+    cambios.push(listas);
+  }
+  if (cambios.length) await guardar(cambios);
 }
 
 // ---------- Copia de seguridad (cifrada) ----------

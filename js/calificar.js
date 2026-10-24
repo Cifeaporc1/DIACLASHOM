@@ -430,18 +430,29 @@ export function vistaLibreta(id) {
     <div class="tarjeta">
       <label class="campo" style="margin:0"><span>Fecha de recogida</span><input type="date" id="l-fecha" value="${esc(l.fecha)}"></label>
       <p class="ayuda" style="margin:10px 0 0">Cuenta como un trabajo más en cada CE TP de la ${evTexto(l.ev)} de ${mods.map((m) => esc(etiqueta(m.codigo))).join(' y ')}.
-      ${imprescindible ? ' En 1279 es imprescindible: sin libreta, los CE PP de la evaluación valen 0.' : ''}
+      ${imprescindible ? ' Es imprescindible para evaluar las prácticas: si no la entrega, los CE de prácticas (PP) de esta evaluación quedan sin evaluar (NE) hasta que la entregue, y cuenta un 0 como trabajo.' : ''}
       Apartados: ${apartados.map((a) => `${esc(nombreCorto(a.nombre))} ${Math.round(a.peso * 100)} %`).join(' · ')}.</p>
     </div>
     <div class="tabla-notas"><table>
-      <thead><tr><th>Alumno</th><th>Entregada</th>${apartados.map((a) => `<th>${esc(nombreCorto(a.nombre).split(' /')[0])}</th>`).join('')}<th>Nota</th><th>Comentario</th></tr></thead>
+      <thead><tr><th>Alumno</th><th>¿La entrega?</th>${apartados.map((a) => `<th>${esc(nombreCorto(a.nombre).split(' /')[0])}</th>`).join('')}<th>Nota</th><th>Comentario</th></tr></thead>
       <tbody id="l-filas"></tbody>
     </table></div>
     <p class="estado-guardado" id="guardado">Se guarda solo.</p>
+    <h2>Revisiones sin avisar · ${esc(g?.nombre || '')}</h2>
+    <div class="tarjeta">
+      <p class="ayuda" style="margin:0 0 8px">Cuando la pides en cualquier momento: solo apuntas si la lleva al día. No es nota; te sirve para el ajuste de actitud.</p>
+      ${revisionesDe(l.grupo).length ? `<ul class="lista">${revisionesDe(l.grupo).map((r) => { const c = cuentaRevision(r); return `<li><a href="#/revision/${esc(r.id)}"><span class="crece">${esc(fechaCorta(r.fecha))}<span class="sub">${c.si} al día · ${c.no} no al día</span></span></a></li>`; }).join('')}</ul>` : ''}
+      <button class="boton secundario" type="button" id="b-revision">Nueva revisión hoy</button>
+    </div>
   `, { volver: '#/notas', pestana: 'notas', editable: true });
 
   const aviso = $('#guardado');
   const guardar = diferido(async () => { aviso.textContent = 'Guardando…'; await D.guardar(l); aviso.textContent = `Guardado ${ahoraTexto()}`; }, 600);
+  $('#b-revision').addEventListener('click', async () => {
+    guardar.ya();
+    const [r] = await D.guardar({ tipo: 'revisionLibreta', grupo: l.grupo, fecha: hoyISO(), filas: {} });
+    ir(`#/revision/${r.id}`);
+  });
 
   function pintar() {
     $('#l-filas').innerHTML = alumnosDe(l.grupo).map((a) => {
@@ -466,7 +477,7 @@ export function vistaLibreta(id) {
     }));
     $$('#l-filas input.nota').forEach((inp) => inp.addEventListener('input', () => {
       const fl = (l.filas[inp.dataset.clave] = l.filas[inp.dataset.clave] || {});
-      fl.apartados = fl.apartados || [null, null, null, null];
+      fl.apartados = fl.apartados || apartados.map(() => null);
       const v = N.aNumero(inp.value);
       const valido = inp.value === '' || (v !== null && v >= 0 && v <= 10);
       inp.classList.toggle('invalido', !valido);
@@ -483,6 +494,70 @@ export function vistaLibreta(id) {
   }
   $('#l-fecha').addEventListener('change', (ev) => { l.fecha = ev.target.value; guardar(); });
   window.addEventListener('hashchange', () => { if (D.obtener(l.id)) guardar.ya(); }, { once: true });
+  pintar();
+}
+
+// ---------- Revisión de la libreta sin avisar: ¿la lleva al día? ----------
+
+const revisionesDe = (codigoGrupo) => D.porTipo('revisionLibreta').filter((r) => r.grupo === codigoGrupo).sort((a, b) => b.fecha.localeCompare(a.fecha));
+function cuentaRevision(r) {
+  const v = Object.values(r.filas || {});
+  return { si: v.filter((f) => f.alDia === true).length, no: v.filter((f) => f.alDia === false).length };
+}
+export function revisionesAlumno(clave) {
+  const a = alumno(clave);
+  if (!a) return [];
+  return revisionesDe(a.grupo).filter((r) => r.filas?.[clave]?.alDia !== undefined).map((r) => ({ fecha: r.fecha, alDia: r.filas[clave].alDia, comentario: r.filas[clave].comentario || '' }));
+}
+
+export function vistaRevision(id) {
+  const r = D.obtener(id);
+  if (!r || r.tipo !== 'revisionLibreta') return marco('Revisión de libreta', '<p class="vacio">No encontrada.</p>', { volver: '#/notas', pestana: 'notas' });
+  r.filas = r.filas || {};
+  const ESTADOS = [[undefined, '—', ''], [true, 'Al día', 'aldia'], [false, 'No al día', 'falta']];
+  const lib = D.porTipo('libreta').filter((x) => x.grupo === r.grupo).sort((a, b) => b.ev - a.ev)[0];
+  const volver = lib ? `#/libreta/${lib.id}` : '#/notas';
+  marco(`Revisión de libreta · ${grupo(r.grupo)?.nombre || ''}`, `
+    <div class="tarjeta">
+      <label class="campo" style="margin:0"><span>Fecha</span><input type="date" id="r-fecha" value="${esc(r.fecha)}"></label>
+      <p class="ayuda" style="margin:10px 0 0">Toca para cambiar: — · Al día · No al día. No cuenta en la nota.</p>
+    </div>
+    <div class="tarjeta"><ul class="lista practica" id="r-filas"></ul></div>
+    <p class="estado-guardado" id="guardado">Se guarda solo.</p>
+    <div class="botones" style="margin-top:16px"><button class="boton peligro" type="button" id="b-borrar">Borrar esta revisión</button></div>
+  `, { volver, pestana: 'notas', editable: true });
+  const aviso = $('#guardado');
+  const guardar = diferido(async () => { aviso.textContent = 'Guardando…'; await D.guardar(r); aviso.textContent = `Guardado ${ahoraTexto()}`; }, 500);
+  function pintar() {
+    $('#r-filas').innerHTML = alumnosDe(r.grupo).map((a) => {
+      const f = r.filas[a.clave] || {};
+      const e = ESTADOS.find((x) => x[0] === f.alDia) || ESTADOS[0];
+      return `<li class="fila-alumno"><div class="item">
+        <span class="crece clave">${nombreCortoHTML(a.clave)}</span>
+        <button type="button" class="asiste ancho ${e[2]}" data-al="${esc(a.clave)}">${e[1]}</button>
+        <button type="button" class="coment ${f.comentario ? 'activo' : ''}" data-com="${esc(a.clave)}" title="Comentario">💬</button>
+      </div>${f.verComentario || f.comentario ? `<input type="text" class="comentario" data-comentario="${esc(a.clave)}" placeholder="Comentario" value="${esc(f.comentario || '')}">` : ''}</li>`;
+    }).join('');
+    $$('[data-al]').forEach((b) => b.addEventListener('click', () => {
+      const f = (r.filas[b.dataset.al] = r.filas[b.dataset.al] || {});
+      const i = ESTADOS.findIndex((x) => x[0] === f.alDia);
+      const sig = ESTADOS[(i + 1) % ESTADOS.length][0];
+      if (sig === undefined) delete f.alDia; else f.alDia = sig;
+      pintar(); guardar();
+    }));
+    $$('[data-com]').forEach((b) => b.addEventListener('click', () => {
+      (r.filas[b.dataset.com] = r.filas[b.dataset.com] || {}).verComentario = true;
+      pintar();
+      raiz().querySelector(`[data-comentario="${CSS.escape(b.dataset.com)}"]`)?.focus();
+    }));
+    $$('[data-comentario]').forEach((inp) => inp.addEventListener('input', () => { r.filas[inp.dataset.comentario].comentario = inp.value; guardar(); }));
+  }
+  $('#r-fecha').addEventListener('change', (ev) => { r.fecha = ev.target.value; guardar(); });
+  $('#b-borrar').addEventListener('click', async () => {
+    if (!confirm('¿Borrar esta revisión?')) return;
+    guardar.cancelar(); await D.borrar(r.id); ir(volver);
+  });
+  window.addEventListener('hashchange', () => { if (D.obtener(r.id)) guardar.ya(); }, { once: true });
   pintar();
 }
 
@@ -532,7 +607,7 @@ export function vistaNotas() {
         <td>${e.ajuste ? (e.ajuste > 0 ? '+' : '') + fmt(e.ajuste, 1) : ''}</td>
       </tr>`).join('')}</tbody>
     </table></div>
-    <p class="ayuda">* Provisional: faltan CE por calificar. NE: ha superado el límite de faltas (${num(N.limiteFaltas(m))} h). Toca un alumno para ver el detalle y poner el ajuste de actitud.</p>
+    <p class="ayuda">* Provisional: faltan CE por calificar. NE: ha superado el límite de faltas (${num(N.limiteFaltas(m))} h) o no ha entregado la libreta. Toca un alumno para ver el detalle y poner el ajuste de actitud.</p>
     <h2>Calificaciones de esta evaluación</h2>
     <div class="tarjeta">${evaluables.length ? `<ul class="lista">${evaluables.map((x) => `<li><a href="${esc(x.href)}"><span class="crece">${esc(fechaCorta(x.fecha))} · ${esc(x.titulo)}<span class="sub">${esc(x.sub)}</span></span></a></li>`).join('')}</ul>` : '<p class="vacio">Todavía ninguna. Las prácticas se califican desde cada sesión.</p>'}</div>
   `, { pestana: 'notas' });
@@ -565,11 +640,12 @@ export function vistaNotaAlumno(codigoModulo, clave, q) {
     <div class="segmento">${Array.from({ length: m.evaluaciones }, (_, i) => i + 1).map((n) => `<a class="${n === ev ? 'activo' : ''}" href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${n}">${evTexto(n)}</a>`).join('')}</div>
     <div class="tarjeta notas-cabecera" id="cabecera-notas">${cabeceraNotas(e)}</div>
     ${e.perdidaEC ? `<p class="mensaje aviso">Ha superado el límite de faltas (${num(e.faltas.total)} h de ${num(e.faltas.limite)} h): pierde la evaluación continua y el boletín es NE.</p>` : ''}
+    ${e.sinLibreta ? '<p class="mensaje aviso">No ha entregado la libreta de prácticas: las prácticas de esta evaluación quedan sin evaluar y el boletín es NE hasta que la entregue.</p>' : ''}
     ${e.raBajo ? '<p class="mensaje aviso">Tiene algún RA por debajo de 5: el boletín no puede pasar de 4.</p>' : ''}
 
     <h2>Actitud y participación</h2>
     <div class="tarjeta">
-      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(etiqueta(m.codigo))}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Faltas sin justificar: <strong>${num(N.faltasDe(m, ev, clave, ctx()).injustificadas)} h</strong> en esta evaluación (${num(e.faltas.injustificadas)} h en el curso).</p>
+      <p class="ayuda" style="margin:0 0 8px">En las sesiones de ${esc(etiqueta(m.codigo))}: <strong>+${marcas.destaca}</strong> destaca · <strong>−${marcas.mal}</strong> comportamiento · <strong>∅${marcas.ausente}</strong> no estaba. Faltas sin justificar: <strong>${num(N.faltasDe(m, ev, clave, ctx()).injustificadas)} h</strong> en esta evaluación (${num(e.faltas.injustificadas)} h en el curso).${(() => { const rv = revisionesAlumno(clave); return rv.length ? ` Libreta pedida sin avisar: ${rv.map((x) => `${esc(fechaCorta(x.fecha))} <strong>${x.alDia ? 'al día' : 'no al día'}</strong>`).join(' · ')}.` : ''; })()}</p>
       <label class="campo" style="margin:0"><span>Ajuste de la ${evTexto(ev)} (de −1 a +1)</span>
         <input type="number" id="ajuste" min="-1" max="1" step="0.1" inputmode="decimal" value="${e.ajuste || ''}" placeholder="0">
       </label>

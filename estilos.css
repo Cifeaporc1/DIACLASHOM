@@ -539,3 +539,5 @@ button.enlace { background: none; border: 0; padding: 0 4px; color: var(--acento
 a.enlace-fila { display: flex; align-items: center; gap: 8px; padding: 10px 0; text-decoration: none; color: var(--texto); }
 a.enlace-fila + a.enlace-fila { border-top: 1px solid var(--borde); }
 a.enlace-fila .sub { display: block; }
+.asiste.aldia { background: var(--destaca-fondo); border-color: var(--destaca); color: var(--destaca); }
+.asiste.ancho { min-width: 92px; }

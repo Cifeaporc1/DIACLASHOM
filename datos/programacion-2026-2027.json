@@ -86,7 +86,7 @@
    "evaluaciones": 3,
    "pesoFC": 0.8,
    "pesoFE": 0.2,
-   "libretaImprescindible": false,
+   "libretaImprescindible": true,
    "ra": [
     {
      "codigo": "RA1",
@@ -821,7 +821,7 @@
    "evaluaciones": 3,
    "pesoFC": 0.8,
    "pesoFE": 0.2,
-   "libretaImprescindible": false,
+   "libretaImprescindible": true,
    "ra": [
     {
      "codigo": "RA1",
@@ -1883,20 +1883,24 @@
  ],
  "libretaApartados": [
   {
+   "nombre": "Entrega / presentación",
+   "peso": 0.2
+  },
+  {
    "nombre": "Redacción / lenguaje técnico",
-   "peso": 0.25
+   "peso": 0.2
   },
   {
    "nombre": "Limpieza / claridad",
-   "peso": 0.25
+   "peso": 0.2
   },
   {
    "nombre": "Datos",
-   "peso": 0.25
+   "peso": 0.2
   },
   {
    "nombre": "Ortografía",
-   "peso": 0.25
+   "peso": 0.2
   }
  ],
  "tiposAnotacion": [

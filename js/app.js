@@ -322,6 +322,7 @@ async function pintar() {
       case 'practica': return Calificar.vistaPractica(param);
       case 'calificacion': return param === 'nueva' ? Calificar.nuevaCalificacion(q) : Calificar.vistaCalificacion(param);
       case 'libreta': return Calificar.vistaLibreta(param);
+      case 'revision': return Calificar.vistaRevision(param);
       case 'faltas': return Cierre.vistaFaltas(param);
       case 'final': return Cierre.vistaFinal(param);
       case 'final-alumno': { const [mod, clave] = location.hash.split('?')[0].split('/').slice(2).map(decodeURIComponent); return Cierre.vistaFinalAlumno(mod, clave); }

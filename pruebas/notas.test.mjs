@@ -20,21 +20,21 @@ ok('encargado incompleto se ignora', N.notaCE(m79,ce(m79,'2.d'),A,ctx).valor, 6.
 // 2. examen práctico sustituye
 ctx.calificaciones=[{instrumento:'EXP',modulo:'1279',ces:['2.d'],filas:{[A]:{notas:{'2.d':5.5}}}}];
 ok('examen práctico sustituye', N.notaCE(m79,ce(m79,'2.d'),A,ctx).valor, 5.5);
-// 3. 1279 sin libreta → PP 0
+// 3. Sin libreta → CE PP sin evaluar (NE)
 ctx.libretas=[{grupo:'G2',ev:1,filas:{[A]:{entregada:false}}}];
-let r=N.notaCE(m79,ce(m79,'2.d'),A,ctx); ok('1279 sin libreta: PP = 0', r.valor, 0); ok('estado', r.estado, 'Sin libreta');
+let r=N.notaCE(m79,ce(m79,'2.d'),A,ctx); ok('1279 sin libreta: PP sin evaluar', r.valor, null); ok('estado', r.estado, 'NE: sin libreta');
 // 1274 no exige libreta
 const C74=[{modulo:'1274',codigo:'1.b'}];
 ctx={apartadosLibreta, practicas:[prac('a',C74,{valor:7})], libretas:[{grupo:'G1',ev:1,filas:{[A]:{entregada:false}}}]};
-ok('1274 sin libreta: PP intacto', N.notaCE(m74,ce(m74,'1.b'),A,ctx).valor, 7);
+ok('1274 sin libreta: también PP sin evaluar', N.notaCE(m74,ce(m74,'1.b'),A,ctx).valor, null);
 // 4. TP con libreta
 const trab=(cod,v,m='1279')=>({instrumento:'TP',modulo:m,ces:[cod],filas:{[A]:{notas:{[cod]:v}}}});
-ctx={apartadosLibreta, calificaciones:[trab('1.b',8)], libretas:[{grupo:'G2',ev:1,filas:{[A]:{entregada:true,apartados:[6,7,8,9]}}}]};
-ok('TP 8 + libreta 7,5', N.notaCE(m79,ce(m79,'1.b'),A,ctx).valor, 7.75);
+ctx={apartadosLibreta, calificaciones:[trab('1.b',8)], libretas:[{grupo:'G2',ev:1,filas:{[A]:{entregada:true,apartados:[7,6,7,8,9]}}}]};
+ok('TP 8 + libreta 7,4', Math.round(N.notaCE(m79,ce(m79,'1.b'),A,ctx).valor*100)/100, 7.7);
 ok('TP sin trabajo: la libreta sola no da nota', N.notaCE(m79,ce(m79,'1.c'),A,ctx).valor, null);
 ctx.libretas[0].filas[A]={entregada:false};
 ok('TP 8 + libreta no entregada (0)', N.notaCE(m79,ce(m79,'1.b'),A,ctx).valor, 4);
-ctx.libretas[0].filas[A]={entregada:true,apartados:[6,7,null,9]};
+ctx.libretas[0].filas[A]={entregada:true,apartados:[7,6,7,null,9]};
 ok('libreta incompleta no cuenta', N.notaCE(m79,ce(m79,'1.b'),A,ctx).valor, 8);
 ctx.calificaciones.push(trab('1.b',6));
 ok('dos trabajos del mismo CE: media', N.notaCE(m79,ce(m79,'1.b'),A,ctx).valor, 7);
@@ -72,7 +72,7 @@ ctx=todo(m79,1,(c)=>c.codigo==='1.a'?10:0);
 ok('ponderación de CE (1.a 15 %)', N.notaRA(m79,m79.ra[0],A,ctx).valor, 1.5);
 // Redondeo
 ok('redondear 4,5', N.redondear(4.5), 5); ok('redondear 6,49', N.redondear(6.49), 6); ok('redondear 0,9', N.redondear(0.9), 1);
-ok('libreta 25 % cada apartado', N.notaLibreta({entregada:true,apartados:['6','7,5',8,9]},apartadosLibreta), 7.625);
+ok('libreta 20 % cada apartado', Math.round(N.notaLibreta({entregada:true,apartados:['6','7,5',8,9,10]},apartadosLibreta)*1000)/1000, 8.1);
 // 1.º: práctica común con CE de 1274 y 1276
 const m76=P.modulos.find(m=>m.codigo==='1276');
 const pc=prac('x',[{modulo:'1274',codigo:'1.b'},{modulo:'1276',codigo:'1.c'}],{rol:'encargado',items:[8,8,8,8,8]});
@@ -93,6 +93,15 @@ ok('41 h: supera (cuentan también las justificadas)', N.faltasHasta(m79,2,A,ctx
 ok('ev1 sin pérdida', N.notaEvaluacion(m79,1,A,ctx).boletinTexto, '6');
 ok('ev2 con pérdida: NE', N.notaEvaluacion(m79,2,A,ctx).boletinTexto, 'NE');
 ok('sin justificar acumuladas', N.faltasHasta(m79,2,A,ctx).injustificadas, 25);
+// Sin libreta en la 1.ª ev: boletín NE y los RA con prácticas quedan pendientes en la final
+ctx=todoMod(m79,()=>6);
+ctx.libretas=[{grupo:'G2',ev:1,filas:{[A]:{entregada:false}}}];
+ok('sin libreta: ev1 NE', N.notaEvaluacion(m79,1,A,ctx).boletinTexto, 'NE');
+ok('sin libreta: ev2 normal', N.notaEvaluacion(m79,2,A,ctx).boletinTexto, '6');
+const fl=N.notaFinal(m79,A,ctx);
+ok('sin libreta: la final queda sin calcular', fl.fcReal, null);
+ctx.libretas[0].filas[A]={entregada:true,apartados:[6,6,6,6,6]};
+ok('la entrega después: vuelve la nota', N.notaEvaluacion(m79,1,A,ctx).boletinTexto, '6');
 // Nota final
 ctx=todoMod(m79,()=>6);
 let f=N.notaFinal(m79,A,ctx);

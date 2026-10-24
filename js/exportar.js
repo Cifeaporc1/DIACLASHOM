@@ -98,6 +98,14 @@ export function construirHojas(opciones = {}) {
   }
   hojas.push(['Notas puestas', notas]);
   hojas.push(['Encargado', encargado]);
+  const revisiones = [];
+  for (const r of D.porTipo('revisionLibreta').sort(porFecha)) {
+    for (const [clave, f] of Object.entries(r.filas || {})) {
+      if (f.alDia === undefined) continue;
+      revisiones.push({ Fecha: fecha(r.fecha), Grupo: grupo(r.grupo)?.nombre || r.grupo, Alumno: al(clave), 'Al día': f.alDia ? 'Sí' : 'No', Comentario: f.comentario || '' });
+    }
+  }
+  hojas.push(['Revisiones de libreta', revisiones]);
 
   const libretas = [];
   for (const l of D.porTipo('libreta').sort((a, b) => a.grupo.localeCompare(b.grupo) || a.ev - b.ev)) {
@@ -127,7 +135,7 @@ export function construirHojas(opciones = {}) {
         for (const r of e.ras) fila[r.codigo] = r2(r.valor);
         Object.assign(fila, {
           'Ajuste actitud': r2(e.ajuste) || '', 'Nota real': r2(e.real), 'Boletín': e.boletinTexto === '—' ? '' : e.boletinTexto,
-          Estado: e.perdidaEC ? 'Pierde evaluación continua' : e.completa ? (e.faltanCE ? `Faltan ${e.faltanCE} CE` : 'Completa') : 'Provisional',
+          Estado: e.perdidaEC ? 'Pierde evaluación continua' : e.sinLibreta ? 'NE: sin libreta de prácticas' : e.completa ? (e.faltanCE ? `Faltan ${e.faltanCE} CE` : 'Completa') : 'Provisional',
           'Faltas sin justificar (ev.)': r2(N.faltasDe(m, ev, a.clave, ctx).injustificadas), 'Faltas acumuladas': r2(e.faltas.total),
         });
         evaluaciones.push(fila);
