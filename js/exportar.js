@@ -63,10 +63,14 @@ export function construirHojas(opciones = {}) {
   for (const p of D.porTipo('practica').sort(porFecha)) {
     for (const [clave, f] of Object.entries(p.filas || {})) {
       const nEnc = f.rol === 'encargado' ? N.notaEncargado(f.items) : null;
+      if (f.noPreparado || f.pierdeTurno) {
+        encargado.push({ Fecha: fecha(p.fecha), 'Módulos': etiquetas(p.modulos), CE: (p.ces || []).map((c) => `${c.modulo} ${c.codigo}`).join(', '), Alumno: al(clave), Turno: f.noPreparado ? 'Perdido: no vino preparado' : 'Perdido: falta sin justificar' });
+      }
       if (f.rol === 'encargado') {
-        const fila = { Fecha: fecha(p.fecha), 'Módulos': etiquetas(p.modulos), CE: (p.ces || []).map((c) => `${c.modulo} ${c.codigo}`).join(', '), Alumno: al(clave) };
+        const fila = { Fecha: fecha(p.fecha), 'Módulos': etiquetas(p.modulos), CE: (p.ces || []).map((c) => `${c.modulo} ${c.codigo}`).join(', '), Alumno: al(clave), Turno: 'Hizo de encargado' };
         items.forEach((it, i) => { fila[String(it).split(/[ .]/)[0]] = r2(f.items?.[i]); });
         fila.Media = r2(nEnc);
+        fila.Informe = ({ aTiempo: 'A tiempo', tarde: 'Tarde', noEntregado: 'No entregado' })[f.informe] || 'Pendiente';
         encargado.push(fila);
       }
       for (const c of p.ces || []) {
@@ -76,9 +80,10 @@ export function construirHojas(opciones = {}) {
         let origen = 'Práctica';
         if (f.asiste === 'falta') { nota = 0; origen = 'Falta sin justificar'; }
         else if (f.asiste === 'justificada') { origen = 'Falta justificada (no cuenta)'; peso = 0; }
+        else if (f.noPreparado) { nota = 0; origen = 'No vino preparado de encargado'; }
         else if (f.rol === 'encargado') { nota = r2(nEnc); peso = 2; origen = 'Encargado'; }
         else nota = r2(f.valor);
-        if (nota === '' && !f.asiste) continue;
+        if (nota === '' && !f.asiste && !f.noPreparado) continue;
         notas.push({ Fecha: fecha(p.fecha), 'Módulo': etiqueta(c.modulo), 'Evaluación': ce?.ev || '', RA: ce?.ra || '', CE: c.codigo, Instrumento: 'PP', Alumno: al(clave), Origen: origen, Nota: nota, Peso: peso, Comentario: f.comentario || '' });
       }
     }

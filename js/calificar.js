@@ -2,6 +2,7 @@
 import * as D from './datos.js';
 import * as N from './notas.js';
 import * as Cierre from './cierre.js';
+import * as E from './encargado.js';
 import {
   esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta, nombre, nombreHTML, nombreCortoHTML,
 } from './util.js';
@@ -88,7 +89,8 @@ export function vistaPractica(id) {
       <div class="campo"><span>CE de ejecución práctica (PP) de esta práctica</span><div id="ces" class="ces-elegir"></div></div>
       <p class="ayuda" style="margin:0">${p.modulos.length > 1 ? 'Práctica común: las notas cuentan en los CE de los dos módulos.' : 'Las notas cuentan en los CE marcados.'}</p>
     </div>
-    <p class="ayuda">Toca un alumno y después su nota. La estrella marca al encargado: ese día se valora con sus 5 ítems y cuenta doble. «Falta» cuenta 0; «Justif.» no cuenta.</p>
+    <div class="tarjeta turno" id="turno"></div>
+    <p class="ayuda">Toca un alumno y después su nota. La estrella marca al encargado: ese día se valora con sus 5 ítems y cuenta doble. «Falta» y «No prep.» cuentan 0; «Justif.» no cuenta.</p>
     <div class="tarjeta"><ul class="lista practica" id="filas"></ul></div>
     <div class="teclado" id="teclado" aria-label="Teclado de notas">
       <div class="teclado-cab"><span id="t-actual">Elige un alumno</span><span class="estado-guardado" id="guardado"></span></div>
@@ -116,7 +118,7 @@ export function vistaPractica(id) {
   const fila = (clave) => (p.filas[clave] = p.filas[clave] || {});
 
   function textoNota(f) {
-    if (f.asiste === 'falta') return '0';
+    if (f.asiste === 'falta' || f.noPreparado) return '0';
     if (f.asiste === 'justificada') return '—';
     if (f.rol === 'encargado') { const n = N.notaEncargado(f.items); return n === null ? 'Enc.' : fmt(n, 1); }
     return f.valor === undefined || f.valor === null || f.valor === '' ? '' : fmt(Number(f.valor), 2);
@@ -125,9 +127,9 @@ export function vistaPractica(id) {
   function pintarFilas() {
     $('#filas').innerHTML = alumnos.map((a) => {
       const f = p.filas[a.clave] || {};
-      const asiste = ASISTE.find((x) => x[0] === f.asiste) || ASISTE[0];
+      const asiste = f.noPreparado ? [null, 'No prep.', 'falta'] : (ASISTE.find((x) => x[0] === f.asiste) || ASISTE[0]);
       const enc = f.rol === 'encargado';
-      return `<li class="fila-alumno ${actual === a.clave ? 'seleccionada' : ''} ${f.asiste ? 'ausente' : ''}" data-clave="${esc(a.clave)}">
+      return `<li class="fila-alumno ${actual === a.clave ? 'seleccionada' : ''} ${f.asiste || f.noPreparado ? 'ausente' : ''}" data-clave="${esc(a.clave)}">
         <div class="item">
           <button type="button" class="crece clave sel" data-sel="${esc(a.clave)}" title="${esc(nombre(a.clave))}">${nombreCortoHTML(a.clave)}</button>
           <button type="button" class="asiste ${asiste[2]}" data-asiste="${esc(a.clave)}">${asiste[1]}</button>
@@ -136,18 +138,78 @@ export function vistaPractica(id) {
           <button type="button" class="coment ${f.comentario ? 'activo' : ''}" data-com="${esc(a.clave)}" title="Comentario">💬</button>
         </div>
         ${enc ? `<div class="items-encargado">${items.map((it, i) => `<label title="${esc(it)}"><span>${esc(String(it).split(/[ .]/)[0])}</span><input type="text" inputmode="decimal" data-item="${i}" data-clave="${esc(a.clave)}" value="${esc(f.items?.[i] ?? '')}"></label>`).join('')}</div>` : ''}
+        ${enc ? informeHTML(f) : ''}
         ${f.verComentario || f.comentario ? `<input type="text" class="comentario" data-comentario="${esc(a.clave)}" placeholder="Comentario" value="${esc(f.comentario || '')}">` : ''}
       </li>`;
     }).join('');
     $('#t-actual').textContent = actual ? `${nombre(actual)}: ${textoNota(p.filas[actual] || {}) || 'sin nota'}` : 'Elige un alumno';
+    pintarTurno();
     enlazar();
+  }
+
+  // ---------- Turno de encargado e informe ----------
+  function hacerEncargado(f) {
+    f.rol = 'encargado';
+    f.items = f.items || [null, null, null, null, null];
+    delete f.asiste; delete f.noPreparado; delete f.pierdeTurno; delete f.valor;
+  }
+  const ordenTurno = () => (E.ORDEN_DESCENDENTE[p.grupo] ? [...alumnos].reverse() : alumnos).map((a) => a.clave);
+  const plazo = () => E.plazoInforme(p.fecha, sesion?.fin);
+
+  function informeHTML(f) {
+    const vencido = !f.informe && new Date() > plazo();
+    return `<div class="informe">
+      <span class="sub">Informe · plazo hasta ${esc(plazo().toLocaleString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }))}${vencido ? ' · <strong class="vencido">fuera de plazo</strong>' : ''}</span>
+      <div class="opciones-informe">${E.ESTADOS_INFORME.map(([k, t]) => `<button type="button" class="chip-filtro ${f.informe === k ? 'activo' : ''}" data-informe="${k || ''}">${t}</button>`).join('')}</div>
+    </div>`;
+  }
+
+  function pintarTurno() {
+    const caja = $('#turno');
+    const enc = alumnos.find((a) => p.filas[a.clave]?.rol === 'encargado');
+    const perdidos = alumnos.filter((a) => p.filas[a.clave]?.noPreparado || p.filas[a.clave]?.pierdeTurno);
+    const listaPerdidos = perdidos.length ? `<div class="perdidos">${perdidos.map((a) => `<span>${nombreCortoHTML(a.clave)} · ${p.filas[a.clave].noPreparado ? 'no vino preparado' : 'falta sin justificar'} <button type="button" class="enlace" data-deshacer="${esc(a.clave)}">Deshacer</button></span>`).join('')}</div>` : '';
+    if (enc) {
+      caja.innerHTML = `<div class="titulo">★ Encargado: ${nombreHTML(enc.clave)}</div>${listaPerdidos}`;
+    } else {
+      const t = E.turnoSiguiente(ordenTurno(), E.anterioresA(p, D.porTipo('practica')), p.filas);
+      caja.innerHTML = t ? `
+        <div class="sub">Turno de encargado · ${p.grupo === 'G2' ? 'del último al primero' : 'del primero al último'} · vuelta ${t.vuelta}</div>
+        <div class="titulo">Le toca: ${nombreHTML(t.clave)}</div>
+        ${listaPerdidos}
+        <div class="botones-turno">
+          <button type="button" class="boton pequeno" data-turno="enc" data-clave="${esc(t.clave)}">Es el encargado</button>
+          <button type="button" class="boton pequeno secundario" data-turno="nopre" data-clave="${esc(t.clave)}">No viene preparado</button>
+          <button type="button" class="boton pequeno secundario" data-turno="falta" data-clave="${esc(t.clave)}">Falta</button>
+          <button type="button" class="boton pequeno secundario" data-turno="just" data-clave="${esc(t.clave)}">Falta justificada</button>
+        </div>
+        <p class="ayuda" style="margin:0">«No viene preparado» y «Falta»: un 0 y pierde el turno hasta la siguiente vuelta. «Falta justificada»: conserva el turno para la próxima práctica. Para elegir a otro, toca su ☆.</p>`
+        : `<div class="titulo">Turno de encargado</div>${listaPerdidos}<p class="sub">Nadie disponible hoy.</p>`;
+    }
+    caja.querySelectorAll('[data-turno]').forEach((b) => b.addEventListener('click', () => {
+      const f = fila(b.dataset.clave);
+      delete f.valor; delete f.rol;
+      if (b.dataset.turno === 'enc') { hacerEncargado(f); actual = b.dataset.clave; }
+      if (b.dataset.turno === 'nopre') { f.noPreparado = true; delete f.asiste; }
+      if (b.dataset.turno === 'falta') { f.asiste = 'falta'; f.pierdeTurno = true; }
+      if (b.dataset.turno === 'just') { f.asiste = 'justificada'; delete f.pierdeTurno; }
+      pintarFilas();
+      guardar();
+    }));
+    caja.querySelectorAll('[data-deshacer]').forEach((b) => b.addEventListener('click', () => {
+      const f = fila(b.dataset.deshacer);
+      delete f.noPreparado; delete f.pierdeTurno;
+      if (f.asiste === 'falta') delete f.asiste;
+      pintarFilas();
+      guardar();
+    }));
   }
 
   function siguiente(desde) {
     const i = alumnos.findIndex((a) => a.clave === desde);
     for (let k = i + 1; k < alumnos.length; k++) {
       const f = p.filas[alumnos[k].clave] || {};
-      if (!f.asiste && f.rol !== 'encargado') return alumnos[k].clave;
+      if (!f.asiste && !f.noPreparado && f.rol !== 'encargado') return alumnos[k].clave;
     }
     return null;
   }
@@ -156,6 +218,8 @@ export function vistaPractica(id) {
     $$('[data-sel]').forEach((b) => b.addEventListener('click', () => { actual = b.dataset.sel; pintarFilas(); }));
     $$('[data-asiste]').forEach((b) => b.addEventListener('click', () => {
       const f = fila(b.dataset.asiste);
+      delete f.pierdeTurno;
+      if (f.noPreparado) { delete f.noPreparado; pintarFilas(); guardar(); return; }
       const i = ASISTE.findIndex((x) => x[0] === f.asiste);
       const sig = ASISTE[(i + 1) % ASISTE.length][0];
       if (sig) f.asiste = sig; else delete f.asiste;
@@ -164,7 +228,7 @@ export function vistaPractica(id) {
     }));
     $$('[data-enc]').forEach((b) => b.addEventListener('click', () => {
       const f = fila(b.dataset.enc);
-      if (f.rol === 'encargado') { delete f.rol; } else { f.rol = 'encargado'; f.items = f.items || [null, null, null, null, null]; delete f.asiste; }
+      if (f.rol === 'encargado') { delete f.rol; } else { hacerEncargado(f); }
       actual = b.dataset.enc;
       pintarFilas();
       guardar();
@@ -174,6 +238,13 @@ export function vistaPractica(id) {
       f.verComentario = true;
       pintarFilas();
       raiz().querySelector(`[data-comentario="${CSS.escape(b.dataset.com)}"]`)?.focus();
+    }));
+    $$('[data-informe]').forEach((b) => b.addEventListener('click', () => {
+      const clave = b.closest('li').dataset.clave;
+      const f = fila(clave);
+      if (b.dataset.informe) f.informe = b.dataset.informe; else delete f.informe;
+      pintarFilas();
+      guardar();
     }));
     $$('[data-comentario]').forEach((inp) => inp.addEventListener('input', () => { fila(inp.dataset.comentario).comentario = inp.value; guardar(); }));
     $$('[data-item]').forEach((inp) => inp.addEventListener('input', () => {
@@ -190,7 +261,7 @@ export function vistaPractica(id) {
   $$('#teclado [data-n]').forEach((b) => b.addEventListener('click', () => {
     if (!actual) return;
     const f = fila(actual);
-    if (f.rol === 'encargado') return; // el encargado se valora con sus ítems
+    if (f.rol === 'encargado' || f.noPreparado) return; // el encargado se valora con sus ítems; el no preparado es un 0
     let v = Number(b.dataset.n);
     if (medio && v < 10) v += 0.5;
     f.valor = v;
@@ -546,4 +617,23 @@ export function resumenAlumno(clave) {
         return `<a href="#/nota-alumno/${esc(m.codigo)}/${esc(clave)}?ev=${ev}"><span class="sub">${evTexto(ev)}</span><strong>${fmt(e.real)}</strong><span class="sub">Boletín ${e.boletinTexto}${e.boletin !== null && !e.completa && !e.perdidaEC ? '*' : ''}</span></a>`;
       }).join('')}</div>
     </div>`).join('');
+}
+
+// ---------- Informes de encargado pendientes (para Hoy) ----------
+
+export function informesPendientesHTML() {
+  const filas = [];
+  for (const p of D.porTipo('practica')) {
+    const sesion = p.sesion ? D.obtener(p.sesion) : null;
+    for (const [clave, f] of Object.entries(p.filas || {})) {
+      if (f.rol !== 'encargado') continue;
+      const plazo = E.plazoInforme(p.fecha, sesion?.fin);
+      if (!f.informe) filas.push({ p, clave, texto: new Date() > plazo ? '<strong class="vencido">Fuera de plazo</strong>' : `Plazo hasta ${esc(plazo.toLocaleString('es-ES', { weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }))}` });
+      else if (f.informe !== 'noEntregado' && N.notaEncargado(f.items) === null) filas.push({ p, clave, texto: 'Informe recibido: faltan ítems por poner' });
+    }
+  }
+  if (!filas.length) return '';
+  filas.sort((a, b) => a.p.fecha.localeCompare(b.p.fecha));
+  return `<h2>Informes de encargado · ${filas.length}</h2>
+    <div class="tarjeta">${filas.map((x) => `<a class="item enlace-fila" href="#/practica/${esc(x.p.id)}"><span class="crece">${nombreHTML(x.clave)}<span class="sub">Práctica del ${esc(fechaCorta(x.p.fecha))} · ${x.texto}</span></span><span aria-hidden="true">›</span></a>`).join('')}</div>`;
 }

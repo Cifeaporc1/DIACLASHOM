@@ -3,6 +3,7 @@
 // Reglas (acordadas con Luis el 17-10-2026, sobre las tablas del curso 2026-2027):
 //  - CE PP: media ponderada de las notas diarias de prácticas. Día normal: nota de ejecución, peso 1.
 //    Día de encargado: media de sus 5 ítems, peso 2. Falta sin justificar: 0, peso 1. Falta justificada: no cuenta.
+//    Le tocaba de encargado y no vino preparado: 0, peso 1 (práctica no valorada).
 //    Un examen práctico final sustituye a la nota de ese CE PP.
 //    En módulos con libreta imprescindible (1279), sin libreta entregada el CE PP vale 0.
 //  - CE TP: media de las notas de trabajo del CE más la libreta de esa evaluación como un trabajo más.
@@ -79,6 +80,7 @@ export function notaCE(mod, ce, clave, ctx) {
       if (!f) continue;
       if (f.asiste === 'falta') { pares.push([0, 1]); out.aportes.push({ fecha: p.fecha, valor: 0, peso: 1, motivo: 'Falta sin justificar' }); continue; }
       if (f.asiste === 'justificada') continue;
+      if (f.noPreparado) { pares.push([0, 1]); out.aportes.push({ fecha: p.fecha, valor: 0, peso: 1, motivo: 'No vino preparado de encargado' }); continue; }
       if (f.rol === 'encargado') {
         const n = notaEncargado(f.items);
         if (n !== null) { pares.push([n, 2]); out.aportes.push({ fecha: p.fecha, valor: n, peso: 2, motivo: 'Encargado' }); }

@@ -525,3 +525,17 @@ table.horario .largo { display: none; }
 }
 table.horario tbody tr:not(.recreo) th { height: 52px; vertical-align: middle; }
 table.horario td { height: auto; }
+
+/* ---------- Turno de encargado e informe ---------- */
+.tarjeta.turno { display: flex; flex-direction: column; gap: 8px; }
+.tarjeta.turno:empty { display: none; }
+.botones-turno { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.perdidos { display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; color: var(--texto-suave); }
+button.enlace { background: none; border: 0; padding: 0 4px; color: var(--acento); text-decoration: underline; font: inherit; cursor: pointer; }
+.informe { display: flex; flex-direction: column; gap: 6px; padding: 6px 0 2px; }
+.opciones-informe { display: flex; flex-wrap: wrap; gap: 6px; }
+.opciones-informe .chip-filtro { font-size: 0.8rem; padding: 4px 10px; cursor: pointer; }
+.vencido { color: var(--error); }
+a.enlace-fila { display: flex; align-items: center; gap: 8px; padding: 10px 0; text-decoration: none; color: var(--texto); }
+a.enlace-fila + a.enlace-fila { border-top: 1px solid var(--borde); }
+a.enlace-fila .sub { display: block; }

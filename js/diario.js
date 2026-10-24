@@ -146,6 +146,7 @@ export function vistaHoy() {
     </div>
     ${avisoHoy()}
     ${agenda.html}
+    ${Calificar.informesPendientesHTML()}
     <h2>Tareas pendientes${tareas.length ? ` · ${tareas.length}` : ''}</h2>
     <div class="tarjeta">${pintarTareas(tareas)}<a class="boton secundario" href="#/reuniones">Reuniones</a></div>
     <h2>Próximo día de clase · ${esc(fechaLarga(hoyISO(siguiente)))}</h2>
