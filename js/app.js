@@ -5,6 +5,7 @@ import { esc, pct, num, evTexto, modulo, grupo, alumnosDe, rutaActual, etiqueta,
 import * as Nombres from './nombres.js';
 import * as Agenda from './agenda.js';
 import * as Curso from './curso.js';
+import * as Grupos from './grupos.js';
 import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
 import * as Cierre from './cierre.js';
@@ -215,6 +216,7 @@ function vistaAlumnos() {
   marco('Alumnos', `
     <div class="segmento">${grupos.map((g) => `<button type="button" data-grupo="${esc(g.codigo)}" class="${g.codigo === grupoElegido ? 'activo' : ''}">${esc(g.nombre)}</button>`).join('')}</div>
     <p class="sub" style="color:var(--texto-suave);margin:0 0 12px">${alumnos.length} alumnos${nombresOcultos() ? ' · nombres ocultos' : ''}</p>
+    <div class="botones" style="margin-bottom:12px"><a class="boton secundario" href="#/grupos?g=${esc(grupoElegido)}">Hacer grupos</a></div>
     <div class="rejilla-claves">${alumnos.map((a) => `<a href="#/alumno/${esc(a.clave)}">${nombreHTML(a.clave)}</a>`).join('')}</div>
   `, { pestana: 'alumnos' });
   raiz.querySelectorAll('[data-grupo]').forEach((b) => b.addEventListener('click', () => { grupoElegido = b.dataset.grupo; vistaAlumnos(); }));
@@ -335,6 +337,7 @@ async function pintar() {
       case 'nombres': return Nombres.vistaNombres();
       case 'semana': return Agenda.vistaSemana(q);
       case 'mes': return Curso.vistaMes(q);
+      case 'grupos': return Grupos.vistaGrupos(q);
       case 'horarios': return Curso.vistaHorarios(q);
       case 'calendario': return Agenda.vistaCalendario();
       case 'ajustes': return await vistaAjustes();
@@ -390,4 +393,5 @@ Cierre.configurar({ marco });
 Nombres.configurar({ marco });
 Agenda.configurar({ marco, pintar: () => pintar() });
 Curso.configurar({ marco, pintar: () => pintar() });
+Grupos.configurar({ marco });
 pintar();

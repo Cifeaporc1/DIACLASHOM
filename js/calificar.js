@@ -3,6 +3,7 @@ import * as D from './datos.js';
 import * as N from './notas.js';
 import * as Cierre from './cierre.js';
 import * as E from './encargado.js';
+import { botonGrupos } from './grupos.js';
 import {
   esc, num, hoyISO, fechaCorta, modulo, grupo, modulos, alumnosDe, alumno, utsDe, listas, ir, diferido, evTexto, etiqueta, nombre, nombreHTML, nombreCortoHTML,
 } from './util.js';
@@ -90,6 +91,7 @@ export function vistaPractica(id) {
       <p class="ayuda" style="margin:0">${p.modulos.length > 1 ? 'Práctica común: las notas cuentan en los CE de los dos módulos.' : 'Las notas cuentan en los CE marcados.'}</p>
     </div>
     <div class="tarjeta turno" id="turno"></div>
+    <div class="botones" style="margin-bottom:12px">${botonGrupos({ practica: p })}</div>
     <p class="ayuda">Toca un alumno y después su nota. La estrella marca al encargado: ese día se valora con sus 5 ítems y cuenta doble. «Falta» y «No prep.» cuentan 0; «Justif.» no cuenta.</p>
     <div class="tarjeta"><ul class="lista practica" id="filas"></ul></div>
     <div class="teclado" id="teclado" aria-label="Teclado de notas">

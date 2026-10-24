@@ -37,6 +37,7 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `js/cierre.js` | Faltas, recuperaciones, empresa y nota final |
 | `js/exportar.js` | Exportación a Excel |
 | `js/ical.js` | Lector de calendarios iCal (eventos repetidos, excepciones) |
+| `js/reparto.js` · `js/grupos.js` | Hacer grupos (por personas por grupo o por número de grupos) desde una práctica, una sesión o Alumnos; evita repetir parejas del reparto anterior. Pruebas: `node pruebas/reparto.test.mjs` |
 | `js/encargado.js` | Turno de encargado (1.º del primero al último, 2.º al revés; no preparado o falta sin justificar = pierde el turno; falta justificada = lo conserva) y plazo del informe (48 h). Pruebas: `node pruebas/encargado.test.mjs` |
 | `js/curso.js` | Calendario del curso (mes: calendario escolar + Google + tus clases) y horarios (tuyo, 1.º y 2.º). El calendario escolar y los horarios de grupo vienen en `datos/calendario-horarios-2026-2027.json` (con nombres de profesores, por decisión de Luis); se puede importar otro archivo desde la app y entonces se guarda cifrado |
 | `js/agenda.js` | Google Calendar en Hoy y en la Semana; crear reunión o salida desde un evento |

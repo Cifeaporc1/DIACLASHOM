@@ -3,6 +3,7 @@ import * as D from './datos.js';
 import * as Calificar from './calificar.js';
 import * as Agenda from './agenda.js';
 import { avisoHoy } from './curso.js';
+import { botonGrupos } from './grupos.js';
 import {
   esc, hoyISO, aFecha, fechaLarga, fechaCorta, minutos, hhmm, horaInput, horaCorta,
   modulo, grupo, grupos, modulos, modulosDeGrupo, alumnosDe, alumno, utsDe, listas,
@@ -255,6 +256,7 @@ export function vistaSesion(id) {
     <h2>Calificar</h2>
     <div class="tarjeta botones">
       <button class="boton" type="button" id="b-practica">Notas de práctica (CE PP)</button>
+      ${s.grupo ? botonGrupos({ sesion: s }) : ''}
       <button class="boton secundario" type="button" id="b-calificar">Trabajo, prueba u observación</button>
       ${califSesion.length ? `<ul class="lista">${califSesion.map((x) => `<li><a href="${esc(x.href)}"><span class="crece">${esc(x.texto)}</span></a></li>`).join('')}</ul>` : ''}
     </div>

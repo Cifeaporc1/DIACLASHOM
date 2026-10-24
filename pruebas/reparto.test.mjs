@@ -1,0 +1,23 @@
+import * as R from '../js/reparto.js';
+let fallos = 0;
+const ok = (n, a, b) => { const r = JSON.stringify(a) === JSON.stringify(b); if (!r) fallos++; console.log(`${r ? '✔' : '✘'} ${n}${r ? '' : `\n   obtenido ${JSON.stringify(a)}\n   esperado ${JSON.stringify(b)}`}`); };
+ok('28 de 4 en 4: 7 grupos de 4', R.tamanos(28, 'tam', 4), [4, 4, 4, 4, 4, 4, 4]);
+ok('29 de 4 en 4: 7 grupos, uno de 5', R.tamanos(29, 'tam', 4), [5, 4, 4, 4, 4, 4, 4]);
+ok('30 en 4 grupos: 8,8,7,7', R.tamanos(30, 'num', 4), [8, 8, 7, 7]);
+ok('3 alumnos de 4 en 4: un grupo de 3', R.tamanos(3, 'tam', 4), [3]);
+ok('28 de 5 en 5: 6 grupos (5,5,5,5,4,4)', R.tamanos(28, 'tam', 5), [5, 5, 5, 5, 4, 4]);
+ok('30 de 4 en 4: 8 grupos (4×6, 3×2)', R.tamanos(30, 'tam', 4), [4, 4, 4, 4, 4, 4, 3, 3]);
+ok('5 alumnos en 8 grupos: 5 de 1', R.tamanos(5, 'num', 8), [1, 1, 1, 1, 1]);
+const claves = Array.from({ length: 30 }, (_, i) => `A${i + 1}`);
+const r1 = R.hacerGrupos(claves, 'tam', 5);
+ok('están todos una sola vez', r1.grupos.flat().sort(), [...claves].sort());
+ok('6 grupos de 5', r1.grupos.map((g) => g.length), [5, 5, 5, 5, 5, 5]);
+const r2 = R.hacerGrupos(claves, 'tam', 5, r1.grupos);
+ok('el siguiente no repite parejas', r2.repetidas, 0);
+let peor = 0; let prev = r1.grupos;
+for (let k = 0; k < 50; k++) { const r = R.hacerGrupos(claves, 'tam', 4, prev); peor = Math.max(peor, r.repetidas); prev = r.grupos; }
+ok('50 días seguidos de 4 en 4: nunca repite pareja del día anterior', peor, 0);
+const pocos = Array.from({ length: 6 }, (_, i) => `B${i + 1}`);
+const p1 = R.hacerGrupos(pocos, 'num', 2); const p2 = R.hacerGrupos(pocos, 'num', 2, p1.grupos);
+ok('6 alumnos en 2 grupos: repite lo mínimo posible (2)', p2.repetidas, 2);
+console.log(fallos ? `\n${fallos} FALLOS` : '\nTodas las pruebas correctas');

@@ -541,3 +541,19 @@ a.enlace-fila + a.enlace-fila { border-top: 1px solid var(--borde); }
 a.enlace-fila .sub { display: block; }
 .asiste.aldia { background: var(--destaca-fondo); border-color: var(--destaca); color: var(--destaca); }
 .asiste.ancho { min-width: 92px; }
+
+/* ---------- Hacer grupos ---------- */
+.contador { display: grid; grid-template-columns: 56px 1fr 56px; gap: 8px; margin: 12px 0 6px; }
+.contador input { text-align: center; font-size: 1.4rem; font-weight: 700; border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); color: var(--texto); }
+.contador .boton { font-size: 1.4rem; padding: 6px 0; }
+details.quien { margin: 10px 0; }
+details.quien summary { cursor: pointer; color: var(--acento); font-weight: 600; padding: 4px 0; }
+.rejilla-marcar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px 12px; margin-top: 8px; font-size: 0.9rem; }
+.rejilla-marcar label { display: flex; align-items: center; gap: 6px; }
+.lista-grupos { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.grupo-alumnos { margin: 0; padding: 10px 12px; }
+.grupo-cab { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+.grupo-cab .enlace { margin-left: auto; }
+.grupo-alumnos ul { list-style: none; margin: 0; padding: 0; }
+.miembro { background: none; border: 0; padding: 4px 0; text-align: left; width: 100%; color: var(--texto); font: inherit; cursor: pointer; border-radius: 6px; }
+.miembro.elegido { background: var(--acento-suave); outline: 2px solid var(--acento); padding-left: 4px; }
