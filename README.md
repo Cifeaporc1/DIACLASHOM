@@ -55,4 +55,14 @@ La dirección iCal secreta se guarda cifrada como un registro más. La app la en
 2. Diario: sesiones, salidas, anotaciones, charlas y reuniones.
 3. Calificar: prácticas con encargado, trabajos, pruebas, observación directa y libreta.
 4. Cierre y Excel: faltas, recuperaciones, empresa, nota final, exportación. **(versión 0.4.0)**
-5. Nuevo curso.
+5. Nuevo curso. *(pendiente)*
+
+## Versiones posteriores
+
+- Nombres de alumnos: importación desde Excel en el aparato (cifrados), orden alfabético, ocultar nombres y Excel con o sin nombres. Ajuste manual de actitud en la nota final.
+- **0.6.0:** Google Calendar en Hoy y Semana (solo lectura); crear reunión o salida desde un evento.
+- **0.7.0:** Calendario (mes) con calendario escolar, Google y clases; horarios del profesor, 1.º y 2.º GASA.
+- **0.7.1:** calendario escolar y horarios de grupo incluidos en la app (sin importar).
+- **0.8.0:** turno de encargado (no preparado = 0 y pierde el turno), control del informe (48 h) y aviso en Hoy.
+- **0.9.0:** libreta con 5 apartados al 20 %, imprescindible en los tres módulos (sin libreta = prácticas NE); revisiones sin avisar.
+- **0.10.0 (actual):** hacer grupos por tamaño o por número, sin repetir parejas del día anterior.
