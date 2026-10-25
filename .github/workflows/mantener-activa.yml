@@ -1,0 +1,16 @@
+# Supabase pausa los proyectos gratuitos tras una semana sin uso.
+# Esta tarea hace una consulta mínima cada 3 días para que no ocurra en vacaciones.
+name: Mantener activa la base de datos
+on:
+  schedule:
+    - cron: '23 7 */3 * *'
+  workflow_dispatch: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consulta mínima a Supabase
+        run: |
+          curl -fsS -X POST "https://omjtvdjxtqrthdsgljih.supabase.co/rest/v1/rpc/ping" \
+            -H "apikey: sb_publishable_e6X2MnaU5J2cmJE5otKTug_-beDWwlP" \
+            -H "Content-Type: application/json" -d '{}'
