@@ -1,3 +1,4 @@
+import { CIFEAFARM_CE } from './config.js';
 // Fase 3: calificar. Prácticas diarias, trabajos, pruebas, observación directa, examen práctico, libreta y notas.
 import * as D from './datos.js';
 import * as N from './notas.js';
@@ -320,9 +321,9 @@ export function vistaCalificacion(id) {
         <label class="campo"><span>Fecha</span><input type="date" name="fecha" value="${esc(c.fecha)}"></label>
         <label class="campo"><span>Módulo</span><select name="modulo">${modulos().map((m) => `<option value="${esc(m.codigo)}" ${m.codigo === c.modulo ? 'selected' : ''}>${esc(etiqueta(m.codigo))} · ${esc(grupo(m.grupo)?.nombre || '')}</option>`).join('')}</select></label>
       </div>
-      <fieldset class="campo"><legend>Instrumento</legend>
+      ${c.instrumento === 'USO' ? `<p class="mensaje info">Propuesta calculada con el uso de CIFEAFARM${c.desde ? ` del ${esc(c.desde.split('-').reverse().join('/'))} al ${esc((c.hasta || '').split('-').reverse().join('/'))}` : ''}${c.diasRef ? ` (días de referencia: ${esc(c.diasRef)})` : ''}. Ajusta a mano lo que quieras: cuenta como una nota más del CE. El comentario de cada alumno resume sus datos.</p>` : `<fieldset class="campo"><legend>Instrumento</legend>
         <div class="opciones">${INSTR_CALIFICACION.map((i) => `<label class="opcion"><input type="radio" name="instrumento" value="${i}" ${c.instrumento === i ? 'checked' : ''}><span>${esc(N.INSTRUMENTOS[i])}</span></label>`).join('')}</div>
-      </fieldset>
+      </fieldset>`}
       ${c.instrumento === 'EXP' ? '<p class="mensaje info">El examen práctico final sustituye a la nota de prácticas de los CE PP marcados, solo para los alumnos que tengan nota aquí.</p>' : ''}
       <div class="campo"><span>CE que se califican</span><div id="ces" class="ces-elegir"></div></div>
       <p class="estado-guardado" id="guardado">Se guarda solo.</p>
@@ -342,7 +343,7 @@ export function vistaCalificacion(id) {
   const elegidos = c.ces.map((codigo) => ({ modulo: c.modulo, codigo }));
   function pintarSelector() {
     selectorCE({
-      caja: $('#ces'), mods: [c.modulo], filtro: (x) => x.instrumento === instrCE(c.instrumento), elegidos, utInicial: c.ut,
+      caja: $('#ces'), mods: [c.modulo], filtro: (x) => c.instrumento === 'USO' || x.instrumento === instrCE(c.instrumento), elegidos, utInicial: c.ut,
       alCambiar: () => { c.ces = elegidos.map((x) => x.codigo); pintarRejilla(); guardar(); },
     });
   }
@@ -597,6 +598,7 @@ export function vistaNotas() {
       <button class="boton secundario" type="button" id="b-lib">Libreta de la ${evTexto(evNotas)}</button>
       <button class="boton secundario" type="button" id="b-faltas">Faltas de la ${evTexto(evNotas)}</button>
       <a class="boton secundario" href="#/final/${esc(m.codigo)}">Nota final y recuperaciones</a>
+      ${CIFEAFARM_CE.some((x) => x.modulo === m.codigo) ? '<a class="boton secundario" href="#/cifeafarm">Uso de CIFEAFARM</a>' : ''}
     </div>
     <h2>Alumnos</h2>
     <div class="tabla-notas resumen"><table>

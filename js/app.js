@@ -10,6 +10,7 @@ import * as Diario from './diario.js';
 import * as Calificar from './calificar.js';
 import * as Cierre from './cierre.js';
 import * as Exportar from './exportar.js';
+import * as Cifeafarm from './cifeafarm.js';
 
 const raiz = document.getElementById('app');
 let pantallaEditable = false;
@@ -238,6 +239,8 @@ async function vistaAjustes() {
     </div>
     <h2>Alumnos</h2>
     <a class="tarjeta" href="#/nombres"><div class="titulo">Nombres de alumnos</div><div class="sub">${D.porTipo('alumno').filter((a) => a.apellido1 || a.nombre).length} de ${D.porTipo('alumno').filter((a) => a.activo !== false).length} con nombre · importar desde Excel</div></a>
+    <h2>Granjas del centro</h2>
+    <a class="tarjeta" href="#/cifeafarm"><div class="titulo">Uso de CIFEAFARM</div><div class="sub">${D.uno('cifeafarm') ? 'Conectado · traer el uso de cada alumno y proponer la nota del CE de registros' : 'Conectar con la app de las granjas para proponer la nota del CE de registros'}</div></a>
     <h2>Organización</h2>
     <a class="tarjeta" href="#/mes"><div class="titulo">Calendario y horarios</div><div class="sub">Calendario escolar, Google Calendar, tu horario y el de 1.º y 2.º GASA</div></a>
     <a class="tarjeta" href="#/semana"><div class="titulo">Semana</div><div class="sub">Tus clases y los eventos de Google Calendar</div></a>
@@ -340,6 +343,7 @@ async function pintar() {
       case 'grupos': return Grupos.vistaGrupos(q);
       case 'horarios': return Curso.vistaHorarios(q);
       case 'calendario': return Agenda.vistaCalendario();
+      case 'cifeafarm': return await Cifeafarm.vistaCifeafarm();
       case 'ajustes': return await vistaAjustes();
       default: return Diario.vistaHoy();
     }
@@ -394,4 +398,5 @@ Nombres.configurar({ marco });
 Agenda.configurar({ marco, pintar: () => pintar() });
 Curso.configurar({ marco, pintar: () => pintar() });
 Grupos.configurar({ marco });
+Cifeafarm.configurar({ marco });
 pintar();

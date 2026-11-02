@@ -10,6 +10,8 @@
 //    Como en las tablas, la libreta solo entra si el CE tiene al menos una nota de trabajo.
 //  - CE PE y OD: media de las notas.
 //  - RA: media ponderada de los CE con nota, por su peso en el RA.
+//  - Uso de CIFEAFARM (instrumento USO): propuesta que Luis ajusta a mano; cuenta como una nota más del CE,
+//    con peso 1, tanto si el CE es PP (como un día de prácticas) como si es TP (como un trabajo).
 //  - Evaluación: nota real = media ponderada de los RA de la evaluación + ajuste de actitud (−1 a +1),
 //    con dos decimales. Boletín = real redondeada (x,5 sube), mínimo 1, máximo 4 si algún RA < 5.
 
@@ -19,6 +21,7 @@ export const INSTRUMENTOS = {
   TP: 'Trabajo o producto',
   OD: 'Observación directa',
   EXP: 'Examen práctico final',
+  USO: 'Uso de CIFEAFARM',
 };
 
 export const esNum = (x) => typeof x === 'number' && Number.isFinite(x);
@@ -66,6 +69,17 @@ function valorLibreta(fila, apartados) {
 
 const tieneCE = (lista, modulo, codigo) => (lista || []).some((x) => x.modulo === modulo && x.codigo === codigo);
 
+// Notas del uso de CIFEAFARM de este CE (ya ajustadas por Luis)
+function notasUso(mod, ce, clave, ctx, out) {
+  const v = [];
+  for (const c of ctx.calificaciones || []) {
+    if (c.instrumento !== 'USO' || c.modulo !== mod.codigo || !(c.ces || []).includes(ce.codigo)) continue;
+    const n = aNumero(c.filas?.[clave]?.notas?.[ce.codigo]);
+    if (n !== null) { v.push(n); out.aportes.push({ fecha: c.fecha, valor: n, peso: 1, motivo: c.titulo || INSTRUMENTOS.USO }); }
+  }
+  return v;
+}
+
 // ctx: { practicas, calificaciones, libretas, ajustes, apartadosLibreta }
 export function notaCE(mod, ce, clave, ctx) {
   const out = { codigo: ce.codigo, instrumento: ce.instrumento, peso: ce.peso, valor: null, estado: '', aportes: [] };
@@ -89,6 +103,7 @@ export function notaCE(mod, ce, clave, ctx) {
       const v = aNumero(f.valor);
       if (v !== null) { pares.push([v, 1]); out.aportes.push({ fecha: p.fecha, valor: v, peso: 1, motivo: 'Práctica' }); }
     }
+    for (const v of notasUso(mod, ce, clave, ctx, out)) pares.push([v, 1]);
     out.valor = mediaPonderada(pares);
     const examenes = [];
     for (const c of ctx.calificaciones || []) {
@@ -113,11 +128,13 @@ export function notaCE(mod, ce, clave, ctx) {
   // TP, PE y OD
   const notas = [];
   for (const c of ctx.calificaciones || []) {
-    if (c.instrumento !== ce.instrumento || c.modulo !== mod.codigo || !(c.ces || []).includes(ce.codigo)) continue;
+    if (c.instrumento === 'USO' || c.instrumento !== ce.instrumento || c.modulo !== mod.codigo || !(c.ces || []).includes(ce.codigo)) continue;
     const v = aNumero(c.filas?.[clave]?.notas?.[ce.codigo]);
     if (v !== null) { notas.push(v); out.aportes.push({ fecha: c.fecha, valor: v, peso: 1, motivo: c.titulo || INSTRUMENTOS[c.instrumento] }); }
   }
-  if (ce.instrumento === 'TP' && notas.length) {
+  const trabajos = notas.length; // la libreta solo entra si hay algún trabajo (el uso de CIFEAFARM no cuenta para eso)
+  notas.push(...notasUso(mod, ce, clave, ctx, out));
+  if (ce.instrumento === 'TP' && trabajos) {
     const lib = valorLibreta(filaLibreta, ctx.apartadosLibreta || []);
     if (lib !== null) { notas.push(lib); out.aportes.push({ valor: lib, peso: 1, motivo: filaLibreta.entregada ? 'Libreta' : 'Libreta no entregada' }); }
   }

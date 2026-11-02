@@ -43,6 +43,7 @@ Es una app web instalable (PWA). Funciona en el móvil Android y en el PC, sin c
 | `js/agenda.js` | Google Calendar en Hoy y en la Semana; crear reunión o salida desde un evento |
 | `supabase/funciones/calendario/index.ts` | Función de Supabase que lee la dirección iCal secreta (Google no deja leerla desde el navegador). Solo acepta direcciones de calendar.google.com y exige sesión iniciada |
 | `pruebas/ical.test.mjs` | `TZ=Europe/Madrid node pruebas/ical.test.mjs` |
+| `js/cifeafarm.js` · `js/uso.js` | Uso de CIFEAFARM: trae el informe de uso de cada alumno de la app de las granjas (con la cuenta de administrador de CIFEAFARM, guardada cifrada), empareja alias y claves y crea una calificación «Uso de CIFEAFARM» con la propuesta de nota del CE de registros. Pruebas: `node pruebas/uso.test.mjs` |
 | `vendor/` | supabase-js 2.117.2 (MIT) y SheetJS 0.18.5 (Apache 2.0) |
 
 ## Google Calendar (solo lectura)
@@ -65,4 +66,5 @@ La dirección iCal secreta se guarda cifrada como un registro más. La app la en
 - **0.7.1:** calendario escolar y horarios de grupo incluidos en la app (sin importar).
 - **0.8.0:** turno de encargado (no preparado = 0 y pierde el turno), control del informe (48 h) y aviso en Hoy.
 - **0.9.0:** libreta con 5 apartados al 20 %, imprescindible en los tres módulos (sin libreta = prácticas NE); revisiones sin avisar.
-- **0.10.0 (actual):** hacer grupos por tamaño o por número, sin repetir parejas del día anterior.
+- **0.10.0:** hacer grupos por tamaño o por número, sin repetir parejas del día anterior.
+- **0.11.0 (actual):** uso de CIFEAFARM (Más → Uso de CIFEAFARM o Notas): propuesta de nota para 1274 · 2.h (1.º) y 1279 · 4.c (2.º) con los días de trabajo en la app de las granjas, los registros, las tareas del protocolo y los registros corregidos por otros. Luis la ajusta a mano y cuenta como una nota más del CE (peso 1, también en los CE PP). Necesita ejecutar `sql/14_informe_uso.sql` en el Supabase de CIFEAFARM.

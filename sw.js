@@ -1,6 +1,6 @@
 // Service worker: guarda la app en el aparato para que abra sin conexión.
 // No guarda datos: esos van cifrados en IndexedDB. Las llamadas a Supabase nunca pasan por la caché.
-const CACHE = 'diaclashom-0.10.0';
+const CACHE = 'diaclashom-0.11.0';
 const ARCHIVOS = [
   './',
   'index.html',
@@ -19,6 +19,8 @@ const ARCHIVOS = [
   'js/calificar.js',
   'js/cierre.js',
   'js/exportar.js',
+  'js/cifeafarm.js',
+  'js/uso.js',
   'js/nombres.js',
   'js/ical.js',
   'js/agenda.js',
